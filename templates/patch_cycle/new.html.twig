@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New PatchCycle{% endblock %}
+
+{% block body %}
+    <h1>Create new PatchCycle</h1>
+
+    {{ include('patch_cycle/_form.html.twig') }}
+
+    <a href="{{ path('app_patch_cycle_index') }}">back to list</a>
+{% endblock %}
