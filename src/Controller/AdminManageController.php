@@ -11,12 +11,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class AdminManageController extends AbstractController
 {
-    #[Route('/users', name: 'app_admin_users', methods: ['GET'])]
-    public function users(): Response
-    {
-        return $this->render('admin/users.html.twig');
-    }
-
     #[Route('/projects', name: 'app_admin_projects', methods: ['GET'])]
     public function projects(): Response
     {

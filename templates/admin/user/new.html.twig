@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User · Admin{% endblock %}
+
+{% block body %}
+    <div class="shell" style="padding-top:2rem; max-width:720px;">
+        <p class="eyebrow">Directory</p>
+        <h1>Create user</h1>
+        <p class="text-muted">Add a new platform account and assign a role.</p>
+
+        {{ include('admin/user/_form.html.twig', {'button_label': 'Create'}) }}
+
+        <p style="margin-top:1rem;">
+            <a href="{{ path('app_admin_users') }}">← Back to list</a>
+        </p>
+    </div>
+{% endblock %}

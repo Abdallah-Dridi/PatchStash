@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.role) }}
+    {{ form_row(form.plainPassword, { label: 'Password (leave blank to keep current)' }) }}
+    <button class="btn primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
