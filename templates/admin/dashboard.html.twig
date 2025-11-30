@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard · Patchstash{% endblock %}
+
+{% block body %}
+    <section>
+        <header>
+            <h1>Platform overview</h1>
+            <p class="text-muted">High-level health across users, assets, and patch posture.</p>
+        </header>
+
+        <div class="admin-grid">
+            {% for stat in stats %}
+                <article class="stat-card">
+                    <p class="stat-label">{{ stat.label }}</p>
+                    <p class="stat-value">{{ stat.value }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="admin-section">
+        <div class="admin-panel">
+            <h2>Upcoming patch cycles</h2>
+            <p class="text-muted">Soonest deadlines across all assets.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cycle</th>
+                        <th>Asset</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cycle in recent_patch_cycles %}
+                    <tr>
+                        <td>{{ cycle.cycleId }}</td>
+                        <td>{{ cycle.asset ? cycle.asset.name : 'Unassigned' }}</td>
+                        <td>{{ cycle.status }}</td>
+                        <td>{{ cycle.deadline ? cycle.deadline|date('M d, Y') : '—' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">No patch cycles yet.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="admin-panel">
+            <h2>Highest risk CVEs</h2>
+            <p class="text-muted">Top vulnerabilities sorted by CVSS.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CVE</th>
+                        <th>Severity</th>
+                        <th>CVSS</th>
+                        <th>Patch Cycle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for vuln in critical_vulnerabilities %}
+                    <tr>
+                        <td>{{ vuln.cveId }}</td>
+                        <td>{{ vuln.severity }}</td>
+                        <td>{{ vuln.cvss }}</td>
+                        <td>{{ vuln.patchCycle ? vuln.patchCycle.cycleId : 'Unassigned' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">No vulnerabilities recorded.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .text-muted { color: #6b7280; font-size: 0.95rem; }
+        section { margin-bottom: 2rem; }
+        h1 { margin-bottom: 0.2rem; }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .stat-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+        .stat-label { margin: 0; font-size: 0.9rem; color: #6b7280; }
+        .stat-value { margin: 0.35rem 0 0; font-size: 1.9rem; font-weight: 600; color: #111827; }
+        .admin-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .admin-panel {
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            background: #fff;
+            box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.65rem 0.4rem;
+            border-bottom: 1px solid #edf0f7;
+        }
+        th {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+{% endblock %}
