@@ -1,6 +1,49 @@
-composer.phar
-/vendor/
 
-# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
-# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
-# composer.lock
+###> symfony/framework-bundle ###
+/.env*
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+###> IDE & Editor ###
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+###< IDE & Editor ###
+
+###> OS ###
+.DS_Store
+Thumbs.db
+###< OS ###
+
+###> Dependencies & Build ###
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+###< Dependencies & Build ###
+
+###> Local Configuration ###
+docker-compose.override.yaml
+/.phpunit.xml
+/upload/
+/storage/
+*.log
+###< Local Configuration ###
+
