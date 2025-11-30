@@ -1,0 +1,78 @@
+<div class="admin-section">
+    <div class="admin-panel">
+        <header class="panel-header">
+            <div>
+                <h2>Upcoming patch cycles</h2>
+                <p class="text-muted">Soonest deadlines across all assets.</p>
+            </div>
+            <button class="btn ghost" disabled>Manage</button>
+        </header>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cycle</th>
+                        <th>Asset</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cycle in recent_patch_cycles %}
+                    <tr>
+                        <td>{{ cycle.cycleId }}</td>
+                        <td>{{ cycle.asset ? cycle.asset.name : 'Unassigned' }}</td>
+                        <td><span class="status-pill">{{ cycle.status }}</span></td>
+                        <td>{{ cycle.deadline ? cycle.deadline|date('M d, Y') : '—' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">No patch cycles yet.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <header class="panel-header">
+            <div>
+                <h2>Highest risk CVEs</h2>
+                <p class="text-muted">Top vulnerabilities sorted by CVSS.</p>
+            </div>
+            <button class="btn ghost" disabled>View all</button>
+        </header>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>CVE</th>
+                        <th>Severity</th>
+                        <th>CVSS</th>
+                        <th>Patch Cycle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for vuln in critical_vulnerabilities %}
+                    <tr>
+                        <td>{{ vuln.cveId }}</td>
+                        <td>{{ vuln.severity }}</td>
+                        <td>
+                            <span class="cvss-meter">
+                                <span style="width: {{ (vuln.cvss / 10) * 100 }}%"></span>
+                            </span>
+                            {{ vuln.cvss }}
+                        </td>
+                        <td>{{ vuln.patchCycle ? vuln.patchCycle.cycleId : 'Unassigned' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">No vulnerabilities recorded.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
