@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <section>
+        <h1>Dashboard</h1>
+        <p class="text-muted">Welcome {{ app.user ? app.user.username : 'guest' }}. This space will soon display project, module and patch-cycle summaries.</p>
+    </section>
+{% endblock %}

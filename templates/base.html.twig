@@ -12,6 +12,19 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <header>
+            <nav>
+                <a href="{{ path('app_dashboard') }}">Dashboard</a>
+                {% if app.user %}
+                    <span>Signed in as {{ app.user.username }}</span>
+                    <a href="{{ path('app_logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}">Login</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>
