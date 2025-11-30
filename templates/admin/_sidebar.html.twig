@@ -9,14 +9,14 @@
     <nav class="admin-nav">
         <a class="active" href="{{ path('app_admin_dashboard') }}"><span>⌘</span> Overview</a>
         <span class="nav-label">Directory</span>
-        <a href="#"><span>U</span> Users</a>
-        <a href="#"><span>P</span> Projects</a>
-        <a href="#"><span>M</span> Modules</a>
-        <a href="#"><span>A</span> Assets</a>
+        <a href="{{ path('app_admin_users') }}"><span>U</span> Users</a>
+        <a href="{{ path('app_admin_projects') }}"><span>P</span> Projects</a>
+        <a href="{{ path('app_admin_modules') }}"><span>M</span> Modules</a>
+        <a href="{{ path('app_admin_assets') }}"><span>A</span> Assets</a>
         <span class="nav-label">Operations</span>
-        <a href="#"><span>PC</span> Patch Cycles</a>
-        <a href="#"><span>V</span> Vulnerabilities</a>
-        <a href="#"><span>R</span> Reports</a>
+        <a href="{{ path('app_admin_patch_cycles') }}"><span>PC</span> Patch Cycles</a>
+        <a href="{{ path('app_admin_vulnerabilities') }}"><span>V</span> Vulnerabilities</a>
+        <a href="{{ path('app_admin_reports') }}"><span>R</span> Reports</a>
         <span class="nav-label">Configuration</span>
         <a href="#"><span>RP</span> Roles &amp; Permissions</a>
         <a href="#"><span>INT</span> Integrations</a>
