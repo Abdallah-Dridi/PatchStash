@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PatchCycleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
 
@@ -31,14 +33,8 @@ class PatchCycle
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $info = null;
 
-    #[ORM\ManyToOne(targetEntity: Vulnerability::class, inversedBy: 'patchCycles')]
-    #[ORM\JoinColumn(
-        name: 'vulnerability_cve_id',
-        referencedColumnName: 'cve_id',  // ← Now matches
-        nullable: true,
-        onDelete: 'SET NULL'
-    )]
-    private ?Vulnerability $vulnerability = null;
+    #[ORM\OneToMany(mappedBy: 'patchCycle', targetEntity: Vulnerability::class)]
+    private Collection $vulnerabilities;
 
     #[ORM\ManyToOne(targetEntity: Asset::class, inversedBy: 'patchCycles')]
     #[ORM\JoinColumn(
@@ -48,6 +44,11 @@ class PatchCycle
         onDelete: 'SET NULL'
     )]
     private ?Asset $asset = null;
+
+    public function __construct()
+    {
+        $this->vulnerabilities = new ArrayCollection();
+    }
 
     // ------------------- Getters / Setters -------------------
 
@@ -72,8 +73,35 @@ class PatchCycle
     public function getInfo(): ?string { return $this->info; }
     public function setInfo(?string $info): self { $this->info = $info; return $this; }
 
-    public function getVulnerability(): ?Vulnerability { return $this->vulnerability; }
-    public function setVulnerability(?Vulnerability $vulnerability): self { $this->vulnerability = $vulnerability; return $this; }
+    /**
+     * @return Collection<int, Vulnerability>
+     */
+    public function getVulnerabilities(): Collection
+    {
+        return $this->vulnerabilities;
+    }
+
+    public function addVulnerability(Vulnerability $vulnerability): self
+    {
+        if (!$this->vulnerabilities->contains($vulnerability)) {
+            $this->vulnerabilities->add($vulnerability);
+            $vulnerability->setPatchCycle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVulnerability(Vulnerability $vulnerability): self
+    {
+        if ($this->vulnerabilities->removeElement($vulnerability)) {
+            // set the owning side to null (unless already changed)
+            if ($vulnerability->getPatchCycle() === $this) {
+                $vulnerability->setPatchCycle(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getAsset(): ?Asset { return $this->asset; }
     public function setAsset(?Asset $asset): self { $this->asset = $asset; return $this; }

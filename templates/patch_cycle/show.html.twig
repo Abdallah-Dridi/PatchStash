@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PatchCycle{% endblock %}
+
+{% block body %}
+    <h1>PatchCycle</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>CycleId</th>
+                <td>{{ patch_cycle.cycleId }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ patch_cycle.status }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ patch_cycle.description }}</td>
+            </tr>
+            <tr>
+                <th>Deadline</th>
+                <td>{{ patch_cycle.deadline ? patch_cycle.deadline|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>AppliedDate</th>
+                <td>{{ patch_cycle.appliedDate ? patch_cycle.appliedDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Cvss</th>
+                <td>{{ patch_cycle.cvss }}</td>
+            </tr>
+            <tr>
+                <th>Info</th>
+                <td>{{ patch_cycle.info }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_patch_cycle_index') }}">back to list</a>
+
+    <a href="{{ path('app_patch_cycle_edit', {'cycleId': patch_cycle.cycleId}) }}">edit</a>
+
+    {{ include('patch_cycle/_delete_form.html.twig') }}
+{% endblock %}
