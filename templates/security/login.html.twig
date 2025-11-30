@@ -1,34 +1,321 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Sign in · Patchstash{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg: #040818;
+            --panel: #0f1f3f;
+            --panel-alt: #14284f;
+            --border: #223259;
+            --text: #f8fafc;
+            --text-muted: #a5b4cf;
+            --accent: #a855f7;
+            --accent-secondary: #38bdf8;
+            --danger: #ef4444;
+            --radius: 14px;
+            --shadow: 0 30px 60px rgba(5, 12, 35, 0.65);
+        }
+
+        body.auth-page {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 45%), radial-gradient(circle at 15% 25%, rgba(168, 85, 247, 0.25), transparent 35%), #040818;
+            color: var(--text);
+        }
+
+        body.auth-page::before,
+        body.auth-page::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 55%);
+            opacity: 0.4;
+        }
+
+        body.auth-page::after {
+            background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.25), transparent 45%);
+            animation: glow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { opacity: 0.3; }
+            to { opacity: 0.6; }
+        }
+
+        main.auth-main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-layout {
+            width: min(1200px, 100%);
+            background: rgba(8, 15, 40, 0.85);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            overflow: hidden;
+            position: relative;
+        }
+
+        .auth-panel {
+            padding: 3rem;
+        }
+
+        .auth-panel--brand {
+            background: linear-gradient(145deg, rgba(15, 31, 63, 0.9), rgba(17, 24, 39, 0.6));
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .auth-logo {
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .auth-panel--brand h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin: 0;
+        }
+
+        .auth-panel--brand p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .auth-panel--brand ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        .auth-form h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .auth-form p {
+            margin: 0.4rem 0 1.5rem;
+            color: var(--text-muted);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 11, 25, 0.85);
+            padding: 0.9rem 1rem;
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 1rem;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+        }
+
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            gap: 1rem;
+        }
+
+        .toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: not-allowed;
+            user-select: none;
+        }
+
+        .toggle input {
+            display: none;
+        }
+
+        .toggle__track {
+            width: 36px;
+            height: 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .toggle__thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text);
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            transition: transform 0.2s ease;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+            color: #fff;
+            box-shadow: 0 12px 30px rgba(8, 108, 236, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 35px rgba(8, 108, 236, 0.35);
+        }
+
+        .auth-meta {
+            text-align: center;
+            margin-top: 1.4rem;
+            color: var(--text-muted);
+        }
+
+        .auth-meta a {
+            color: var(--accent-secondary);
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fecaca;
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .auth-panel {
+                padding: 2rem;
+            }
+
+            .auth-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+{% block header %}{% endblock %}
+{% block main_class %}auth-main{% endblock %}
 
 {% block body %}
-    <h1>Sign in</h1>
+    <div class="auth-layout">
+        <section class="auth-panel auth-panel--brand">
+            <div class="auth-logo">
+                <span style="color: var(--accent); font-size: 2rem;">⬢</span>
+                Patchstash Platform
+            </div>
+            <h1>Enterprise-grade Patch &amp; Vulnerability Intelligence</h1>
+            <p>
+                Track risk, orchestrate patch cycles, and unlock unified reporting with a single, secure workspace.
+            </p>
+            <ul>
+                <li>• Real-time risk scoring</li>
+                <li>• Smart patch orchestration</li>
+                <li>• Integrated reporting</li>
+            </ul>
+        </section>
 
-    {% if error %}
-        <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+        <section class="auth-panel">
+            <div class="auth-form">
+                <h2>Welcome back</h2>
+                <p>Sign in to continue to Patchstash.</p>
 
-    <form method="post" action="{{ path('app_login') }}">
-        <div>
-            <label for="username">Username</label>
-            <input type="text"
-                   id="username"
-                   name="_username"
-                   value="{{ last_username }}"
-                   autocomplete="username"
-                   required>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password"
-                   id="password"
-                   name="_password"
-                   autocomplete="current-password"
-                   required>
-        </div>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                {% if error %}
+                    <div class="alert">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
 
-        <button type="submit">Log in</button>
-    </form>
+                <form method="post" action="{{ path('app_login') }}">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input
+                            id="username"
+                            name="_username"
+                            type="text"
+                            value="{{ last_username }}"
+                            placeholder="admin"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            id="password"
+                            name="_password"
+                            type="password"
+                            placeholder="••••••••"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <div class="auth-actions">
+                        <label class="toggle">
+                            <input type="checkbox" disabled>
+                            <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="text-muted">Forgot password?</a>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button class="btn" type="submit">Sign in</button>
+                </form>
+
+                <div class="auth-meta">New to Patchstash? <a href="#">Request access</a></div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

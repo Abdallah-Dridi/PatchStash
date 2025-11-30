@@ -11,19 +11,21 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        <header>
-            <nav>
-                <a href="{{ path('app_dashboard') }}">Dashboard</a>
-                {% if app.user %}
-                    <span>Signed in as {{ app.user.username }}</span>
-                    <a href="{{ path('app_logout') }}">Logout</a>
-                {% else %}
-                    <a href="{{ path('app_login') }}">Login</a>
-                {% endif %}
-            </nav>
-        </header>
-        <main>
+    <body class="{% block body_class %}{% endblock %}">
+        {% block header %}
+            <header>
+                <nav>
+                    <a href="{{ path('app_dashboard') }}">Dashboard</a>
+                    {% if app.user %}
+                        <span>Signed in as {{ app.user.username }}</span>
+                        <a href="{{ path('app_logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Login</a>
+                    {% endif %}
+                </nav>
+            </header>
+        {% endblock %}
+        <main class="{% block main_class %}{% endblock %}">
             {% block body %}{% endblock %}
         </main>
     </body>
