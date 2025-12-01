@@ -28,15 +28,25 @@ class Project
     private ?string $info = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET_NULL')]
     private ?User $user = null;
 
     /** @var Collection<int, Module> */
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Module::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'project',
+        targetEntity: Module::class,
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $modules;
 
     /** @var Collection<int, Report> */
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Report::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'project',
+        targetEntity: Report::class,
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $reports;
 
     public function __construct()
@@ -47,25 +57,71 @@ class Project
 
     // ------------------- Getters / Setters -------------------
 
-    public function getId(): ?int { return $this->id; }
+    public function getId(): ?int 
+    { 
+        return $this->id; 
+    }
 
-    public function getName(): string { return $this->name; }
-    public function setName(string $name): self { $this->name = $name; return $this; }
+    public function getName(): string 
+    { 
+        return $this->name; 
+    }
 
-    public function getDescription(): string { return $this->description; }
-    public function setDescription(string $description): self { $this->description = $description; return $this; }
+    public function setName(string $name): self 
+    { 
+        $this->name = $name;
+        return $this; 
+    }
 
-    public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function getDescription(): string 
+    { 
+        return $this->description; 
+    }
 
-    public function getInfo(): ?string { return $this->info; }
-    public function setInfo(?string $info): self { $this->info = $info; return $this; }
+    public function setDescription(string $description): self 
+    { 
+        $this->description = $description;
+        return $this; 
+    }
 
-    public function getUser(): ?User { return $this->user; }
-    public function setUser(?User $user): self { $this->user = $user; return $this; }
+    public function getStatus(): string 
+    { 
+        return $this->status; 
+    }
+
+    public function setStatus(string $status): self 
+    { 
+        $this->status = $status;
+        return $this; 
+    }
+
+    public function getInfo(): ?string 
+    { 
+        return $this->info; 
+    }
+
+    public function setInfo(?string $info): self 
+    { 
+        $this->info = $info;
+        return $this; 
+    }
+
+    public function getUser(): ?User 
+    { 
+        return $this->user; 
+    }
+
+    public function setUser(?User $user): self 
+    { 
+        $this->user = $user;
+        return $this; 
+    }
 
     /** @return Collection<int, Module> */
-    public function getModules(): Collection { return $this->modules; }
+    public function getModules(): Collection 
+    { 
+        return $this->modules; 
+    }
 
     public function addModule(Module $module): self
     {
@@ -85,7 +141,10 @@ class Project
     }
 
     /** @return Collection<int, Report> */
-    public function getReports(): Collection { return $this->reports; }
+    public function getReports(): Collection 
+    { 
+        return $this->reports; 
+    }
 
     public function addReport(Report $report): self
     {
@@ -104,5 +163,8 @@ class Project
         return $this;
     }
 
-    public function __toString(): string { return $this->name; }
+    public function __toString(): string 
+    { 
+        return $this->name; 
+    }
 }
