@@ -38,7 +38,12 @@ class Asset
     private ?Module $module = null;
 
     /** @var Collection<int, PatchCycle> */
-    #[ORM\OneToMany(mappedBy: 'asset', targetEntity: PatchCycle::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'asset',
+        targetEntity: PatchCycle::class,
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
     private Collection $patchCycles;
 
     public function __construct()
