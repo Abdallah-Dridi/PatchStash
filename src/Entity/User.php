@@ -18,23 +18,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $username;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $email;
 
     #[ORM\Column(length: 255)]
     private string $password;
 
     #[ORM\Column(length: 50)]
-    private string $role;               // e.g. Admin, ProjectManager, Operator, Auditor
+    private string $role;               
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $data = null;
 
     /** @var Collection<int, Project> */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Project::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Project::class, orphanRemoval: false)]
     private Collection $projects;
 
     public function __construct()
@@ -84,14 +84,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // ------------------- UserInterface -------------------
     public function getRoles(): array
     {
-        $roleValue = $this->role ?? '';
-        $storedRole = $roleValue
-            ? (str_starts_with($roleValue, 'ROLE_') ? $roleValue : 'ROLE_'.strtoupper($roleValue))
-            : 'ROLE_USER';
+        $base = 'ROLE_USER';
 
-        return array_values(array_unique(['ROLE_USER', $storedRole]));
+        $formatted = $this->role
+            ? (str_starts_with($this->role, 'ROLE_') ? $this->role : 'ROLE_' . strtoupper($this->role))
+            : $base;
+
+        return [$base, $formatted];
     }
-    public function eraseCredentials(): void { /* no sensitive data */ }
+
+    public function eraseCredentials(): void {}
     public function getUserIdentifier(): string { return $this->username; }
 
     public function __toString(): string { return $this->username; }
