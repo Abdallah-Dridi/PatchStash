@@ -1,4 +1,14 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'admin-panel'}}) }}
+    <h2 style="margin-top:0;">Project details</h2>
+    <div class="form-grid">
+        <div>{{ form_row(form.name) }}</div>
+        <div>{{ form_row(form.status) }}</div>
+        <div>{{ form_row(form.user) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.description) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.info) }}</div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_project_index') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save project') }}</button>
+    </div>
 {{ form_end(form) }}

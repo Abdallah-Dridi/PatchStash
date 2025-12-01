@@ -1,10 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Modules · Admin{% endblock %}
 
-{% block body %}
-    <div class="shell" style="padding-top:2rem;">
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
         <h1>Modules</h1>
-        <p class="text-muted">Module management coming soon. Group assets under modules and track their status.</p>
+        <p class="text-muted">Service areas grouped by project.</p>
     </div>
+    <div class="actions">
+        <a class="btn primary" href="{{ path('app_module_index') }}">Open modules</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <p class="text-muted">Use the Modules list to manage ownership, status, and linked assets.</p>
+</div>
 {% endblock %}

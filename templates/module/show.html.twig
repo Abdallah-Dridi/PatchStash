@@ -1,38 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}Module{% endblock %}
+{% block title %}Module · {{ module.name }}{% endblock %}
 
-{% block body %}
-    <h1>Module</h1>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Module</p>
+        <h1>{{ module.name }}</h1>
+        <p class="text-muted">Project alignment and asset coverage.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_module_index') }}">Back</a>
+        <a class="btn primary" href="{{ path('app_module_edit', {'id': module.id}) }}">Edit</a>
+    </div>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ module.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ module.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ module.description }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ module.status }}</td>
-            </tr>
-            <tr>
-                <th>Info</th>
-                <td>{{ module.info }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="admin-panel">
+    <div class="meta-grid">
+        <div class="detail-block">
+            <p class="text-muted">Project</p>
+            <p>{{ module.project ? module.project.name : 'Unassigned' }}</p>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Status</p>
+            {% set status = module.status|default('Pending') %}
+            {% set statusClass = {
+                'Active': 'active',
+                'Pending': 'pending',
+                'Deprecated': 'deprecated',
+                'Failed': 'failed'
+            }[status]|default('pending') %}
+            <span class="badge {{ statusClass }}">{{ status }}</span>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Assets</p>
+            <p><span class="badge neutral">{{ module.assets|length }} linked</span></p>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Info</p>
+            <p>{{ module.info|default('No additional context') }}</p>
+        </div>
+    </div>
+    <div class="detail-block" style="margin-top:1rem;">
+        <p class="text-muted">Description</p>
+        <p>{{ module.description }}</p>
+    </div>
+</div>
 
-    <a href="{{ path('app_module_index') }}">back to list</a>
-
-    <a href="{{ path('app_module_edit', {'id': module.id}) }}">edit</a>
-
-    {{ include('module/_delete_form.html.twig') }}
+{{ include('module/_delete_form.html.twig', { module: module }) }}
 {% endblock %}

@@ -1,41 +1,68 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}Module index{% endblock %}
+{% block title %}Modules · Admin{% endblock %}
 
-{% block body %}
-    <h1>Module index</h1>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
+        <h1>Modules</h1>
+        <p class="text-muted">Service areas linked to projects and assets.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
+        <a class="btn primary" href="{{ path('app_module_new') }}">New module</a>
+    </div>
+</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Info</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for module in modules %}
-            <tr>
-                <td>{{ module.id }}</td>
-                <td>{{ module.name }}</td>
-                <td>{{ module.description }}</td>
-                <td>{{ module.status }}</td>
-                <td>{{ module.info }}</td>
-                <td>
-                    <a href="{{ path('app_module_show', {'id': module.id}) }}">show</a>
-                    <a href="{{ path('app_module_edit', {'id': module.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_module_new') }}">Create new</a>
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All modules</h2>
+            <p class="text-muted">Project ownership and asset counts.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Assets</th>
+                    <th>Info</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                {% set status = module.status|default('Pending') %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Deprecated': 'deprecated',
+                    'Failed': 'failed'
+                }[status]|default('pending') %}
+                <tr>
+                    <td><strong>{{ module.name }}</strong></td>
+                    <td class="text-muted">{{ module.project ? module.project.name : 'Unassigned' }}</td>
+                    <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
+                    <td><span class="badge neutral">{{ module.assets|length }} assets</span></td>
+                    <td class="text-muted">{{ module.info ? module.info|u.truncate(60, '…') : '—' }}</td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_module_show', {'id': module.id}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_module_edit', {'id': module.id}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-muted">No modules found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

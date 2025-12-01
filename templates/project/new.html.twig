@@ -1,11 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}New Project{% endblock %}
 
-{% block body %}
-    <h1>Create new Project</h1>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Create</p>
+        <h1>New project</h1>
+        <p class="text-muted">Define scope, owner, and status.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_project_index') }}">Back</a>
+    </div>
+</div>
 
-    {{ include('project/_form.html.twig') }}
-
-    <a href="{{ path('app_project_index') }}">back to list</a>
+{{ include('project/_form.html.twig') }}
 {% endblock %}

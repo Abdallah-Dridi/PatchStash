@@ -1,11 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}New PatchCycle{% endblock %}
+{% block title %}New Patch Cycle{% endblock %}
 
-{% block body %}
-    <h1>Create new PatchCycle</h1>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Create</p>
+        <h1>New patch cycle</h1>
+        <p class="text-muted">Plan deadlines and attach to an asset.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_patch_cycle_index') }}">Back</a>
+    </div>
+</div>
 
-    {{ include('patch_cycle/_form.html.twig') }}
-
-    <a href="{{ path('app_patch_cycle_index') }}">back to list</a>
+{{ include('patch_cycle/_form.html.twig') }}
 {% endblock %}

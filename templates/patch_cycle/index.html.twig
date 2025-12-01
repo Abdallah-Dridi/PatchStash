@@ -1,45 +1,82 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}PatchCycle index{% endblock %}
+{% block title %}Patch Cycles · Admin{% endblock %}
 
-{% block body %}
-    <h1>PatchCycle index</h1>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Operations</p>
+        <h1>Patch cycles</h1>
+        <p class="text-muted">Track patch windows, CVSS priority, and rollout state.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
+        <a class="btn primary" href="{{ path('app_patch_cycle_new') }}">New cycle</a>
+    </div>
+</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>CycleId</th>
-                <th>Status</th>
-                <th>Description</th>
-                <th>Deadline</th>
-                <th>AppliedDate</th>
-                <th>Cvss</th>
-                <th>Info</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for patch_cycle in patch_cycles %}
-            <tr>
-                <td>{{ patch_cycle.cycleId }}</td>
-                <td>{{ patch_cycle.status }}</td>
-                <td>{{ patch_cycle.description }}</td>
-                <td>{{ patch_cycle.deadline ? patch_cycle.deadline|date('Y-m-d') : '' }}</td>
-                <td>{{ patch_cycle.appliedDate ? patch_cycle.appliedDate|date('Y-m-d') : '' }}</td>
-                <td>{{ patch_cycle.cvss }}</td>
-                <td>{{ patch_cycle.info }}</td>
-                <td>
-                    <a href="{{ path('app_patch_cycle_show', {'cycleId': patch_cycle.cycleId}) }}">show</a>
-                    <a href="{{ path('app_patch_cycle_edit', {'cycleId': patch_cycle.cycleId}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_patch_cycle_new') }}">Create new</a>
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All cycles</h2>
+            <p class="text-muted">Assets, deadlines, and applied dates.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cycle ID</th>
+                    <th>Asset</th>
+                    <th>Status</th>
+                    <th>Deadline</th>
+                    <th>Applied</th>
+                    <th>CVSS</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for patch_cycle in patch_cycles %}
+                {% set status = patch_cycle.status|default('Pending') %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Deprecated': 'deprecated',
+                    'Failed': 'failed'
+                }[status]|default('pending') %}
+                {% set cvss = patch_cycle.cvss|default(0) %}
+                {% set severityClass = cvss >= 9 ? 'critical' : (cvss >= 7 ? 'high' : (cvss >= 4 ? 'medium' : 'low')) %}
+                <tr>
+                    <td><strong>{{ patch_cycle.cycleId }}</strong></td>
+                    <td class="text-muted">{{ patch_cycle.asset ? patch_cycle.asset.name : 'Unassigned' }}</td>
+                    <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
+                    <td>
+                        {{ patch_cycle.deadline ? patch_cycle.deadline|date('M j, Y') : '—' }}
+                    </td>
+                    <td>
+                        {% if patch_cycle.appliedDate %}
+                            <span class="badge active">{{ patch_cycle.appliedDate|date('M j, Y') }}</span>
+                        {% else %}
+                            <span class="badge pending">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {{ severityClass }}">CVSS {{ cvss }}</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_patch_cycle_show', {'cycleId': patch_cycle.cycleId}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_patch_cycle_edit', {'cycleId': patch_cycle.cycleId}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-muted">No patch cycles found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

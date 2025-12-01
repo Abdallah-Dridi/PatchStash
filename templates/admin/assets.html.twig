@@ -1,10 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Assets · Admin{% endblock %}
 
-{% block body %}
-    <div class="shell" style="padding-top:2rem;">
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Inventory</p>
         <h1>Assets</h1>
-        <p class="text-muted">Asset management coming soon. Define servers/services/apps and link them to modules.</p>
+        <p class="text-muted">Browse and manage systems under management.</p>
     </div>
+    <div class="actions">
+        <a class="btn primary" href="{{ path('app_asset_index') }}">Open assets</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <p class="text-muted">Use the Assets list to view, edit, or create items. Quick link above opens the full CRUD view.</p>
+</div>
 {% endblock %}

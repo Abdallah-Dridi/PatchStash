@@ -1,4 +1,17 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'admin-panel'}}) }}
+    <h2 style="margin-top:0;">Patch cycle</h2>
+    <div class="form-grid">
+        <div>{{ form_row(form.cycleId) }}</div>
+        <div>{{ form_row(form.status) }}</div>
+        <div>{{ form_row(form.asset) }}</div>
+        <div>{{ form_row(form.deadline) }}</div>
+        <div>{{ form_row(form.appliedDate) }}</div>
+        <div>{{ form_row(form.cvss) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.description) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.info) }}</div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_patch_cycle_index') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save cycle') }}</button>
+    </div>
 {{ form_end(form) }}

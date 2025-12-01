@@ -1,34 +1,44 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %}User Details · Admin{% endblock %}
+{% block title %}User · {{ user.username }}{% endblock %}
 
-{% block body %}
-    <div class="shell" style="padding-top:2rem; max-width:720px;">
-        <p class="eyebrow">Directory</p>
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">User</p>
         <h1>{{ user.username }}</h1>
-        <p class="text-muted">{{ user.email }}</p>
+        <p class="text-muted">Identity, role, and linked projects.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_users') }}">Back</a>
+        <a class="btn primary" href="{{ path('app_admin_users_edit', {'id': user.id}) }}">Edit</a>
+    </div>
+</div>
 
-        <table class="table" style="width:100%; margin:1.2rem 0;">
-            <tbody>
-                <tr>
-                    <th style="text-align:left;">ID</th>
-                    <td>{{ user.id }}</td>
-                </tr>
-                <tr>
-                    <th style="text-align:left;">Email</th>
-                    <td>{{ user.email }}</td>
-                </tr>
-                <tr>
-                    <th style="text-align:left;">Role</th>
-                    <td>{{ user.role }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="display:flex; gap:1rem; align-items:center;">
-            <a href="{{ path('app_admin_users') }}">← Back</a>
-            <a href="{{ path('app_admin_users_edit', {'id': user.id}) }}">Edit</a>
-            {{ include('admin/user/_delete_form.html.twig') }}
+<div class="admin-panel">
+    <div class="meta-grid">
+        <div class="detail-block">
+            <p class="text-muted">Username</p>
+            <p>{{ user.username }}</p>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Email</p>
+            <p>{{ user.email }}</p>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Role</p>
+            <span class="badge neutral">{{ user.role }}</span>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Projects</p>
+            <p><span class="badge neutral">{{ user.projects|length }} linked</span></p>
+        </div>
+        <div class="detail-block">
+            <p class="text-muted">Notes</p>
+            <p>{{ user.data|default('No additional data') }}</p>
         </div>
     </div>
+</div>
+
+{{ include('admin/user/_delete_form.html.twig', { user: user }) }}
 {% endblock %}
