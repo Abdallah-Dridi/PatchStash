@@ -1,12 +1,47 @@
-<div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6; max-width: 520px;">
-    <h2 style="margin-bottom: 0.5rem;">Hi {{ username }},</h2>
-    <p style="margin-top: 0;">Use this code to verify your Patchstash account:</p>
+<div style="
+    font-family: Arial, sans-serif;
+    color: #0f172a;
+    line-height: 1.7;
+    max-width: 520px;
+    padding: 1rem 0;
+">
+    <h2 style="
+        font-size: 1.4rem;
+        margin: 0 0 0.75rem 0;
+        font-weight: 600;
+        color: #0f172a;
+    ">
+        Welcome to Patchstash, {{ username }}.
+    </h2>
 
-    <div style="margin: 1.2rem 0; padding: 1rem 1.4rem; background: #0f172a; color: #e2e8f0; border-radius: 12px; font-size: 1.4rem; letter-spacing: 0.2rem; text-align: center;">
+    <p style="margin: 0 0 1.2rem 0;">
+        To complete your account setup, enter the verification code below:
+    </p>
+
+    <div style="
+        margin: 1.5rem 0;
+        padding: 1rem 1.5rem;
+        background: #0f172a;
+        color: #f1f5f9;
+        border-radius: 12px;
+        font-size: 1.6rem;
+        font-weight: 600;
+        letter-spacing: 0.25rem;
+        text-align: center;
+    ">
         {{ code }}
     </div>
 
-    <p>This code expires at {{ expiresAt ? expiresAt|date('H:i') ~ ' UTC' : 'soon' }}. If you didn’t request this, you can safely ignore the email.</p>
+    <p style="margin: 0 0 1.2rem 0;">
+        This code expires at
+        <strong>
+            {{ expiresAt ? expiresAt|date('H:i') ~ ' UTC' : 'soon' }}
+        </strong>.
+        If you did not request this verification, simply ignore this email.
+    </p>
 
-    <p style="margin-top: 1.5rem;">Thanks,<br>The Patchstash team</p>
+    <p style="margin-top: 2rem; color: #334155;">
+        Best regards,<br>
+        <strong>The Patchstash Team</strong>
+    </p>
 </div>
