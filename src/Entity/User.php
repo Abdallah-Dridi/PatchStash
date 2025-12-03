@@ -30,6 +30,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private string $role;               
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $verificationCode = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $verificationExpiresAt = null;
+
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $data = null;
 
@@ -60,6 +69,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getData(): ?string { return $this->data; }
     public function setData(?string $data): self { $this->data = $data; return $this; }
+
+    public function isVerified(): bool { return $this->isVerified; }
+    public function setIsVerified(bool $isVerified): self { $this->isVerified = $isVerified; return $this; }
+
+    public function getVerificationCode(): ?string { return $this->verificationCode; }
+    public function setVerificationCode(?string $verificationCode): self { $this->verificationCode = $verificationCode; return $this; }
+
+    public function getVerificationExpiresAt(): ?\DateTimeImmutable { return $this->verificationExpiresAt; }
+    public function setVerificationExpiresAt(?\DateTimeImmutable $expiresAt): self { $this->verificationExpiresAt = $expiresAt; return $this; }
 
     /** @return Collection<int, Project> */
     public function getProjects(): Collection { return $this->projects; }
