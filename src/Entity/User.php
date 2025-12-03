@@ -42,6 +42,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $data = null;
 
+    #[ORM\Column(length: 120, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $resetExpiresAt = null;
+
     /** @var Collection<int, Project> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Project::class, orphanRemoval: false)]
     private Collection $projects;
@@ -78,6 +84,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getVerificationExpiresAt(): ?\DateTimeImmutable { return $this->verificationExpiresAt; }
     public function setVerificationExpiresAt(?\DateTimeImmutable $expiresAt): self { $this->verificationExpiresAt = $expiresAt; return $this; }
+
+    public function getResetToken(): ?string { return $this->resetToken; }
+    public function setResetToken(?string $resetToken): self { $this->resetToken = $resetToken; return $this; }
+
+    public function getResetExpiresAt(): ?\DateTimeImmutable { return $this->resetExpiresAt; }
+    public function setResetExpiresAt(?\DateTimeImmutable $resetExpiresAt): self { $this->resetExpiresAt = $resetExpiresAt; return $this; }
 
     /** @return Collection<int, Project> */
     public function getProjects(): Collection { return $this->projects; }

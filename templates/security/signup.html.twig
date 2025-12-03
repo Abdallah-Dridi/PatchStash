@@ -2,260 +2,69 @@
 
 {% block title %}Create account · Patchstash{% endblock %}
 
-{% block stylesheets %}
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        :root {
-            --bg: #040818;
-            --panel: #0f1f3f;
-            --panel-alt: #14284f;
-            --border: #223259;
-            --text: #f8fafc;
-            --text-muted: #a5b4cf;
-            --accent: #a855f7;
-            --accent-secondary: #38bdf8;
-            --danger: #ef4444;
-            --radius: 14px;
-            --shadow: 0 30px 60px rgba(5, 12, 35, 0.65);
-        }
-
-        body.auth-page {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 45%), radial-gradient(circle at 15% 25%, rgba(168, 85, 247, 0.25), transparent 35%), #040818;
-            color: var(--text);
-        }
-
-        body.auth-page::before,
-        body.auth-page::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 55%);
-            opacity: 0.4;
-        }
-
-        body.auth-page::after {
-            background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.25), transparent 45%);
-            animation: glow 6s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { opacity: 0.3; }
-            to { opacity: 0.6; }
-        }
-
-        main.auth-main {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .auth-layout {
-            width: min(1200px, 100%);
-            background: rgba(8, 15, 40, 0.85);
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            overflow: hidden;
-            position: relative;
-        }
-
-        .auth-panel {
-            padding: 3rem;
-        }
-
-        .auth-panel--brand {
-            background: linear-gradient(145deg, rgba(15, 31, 63, 0.9), rgba(17, 24, 39, 0.6));
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-
-        .auth-logo {
-            font-weight: 600;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .auth-panel--brand h1 {
-            font-size: clamp(1.8rem, 4vw, 2.6rem);
-            margin: 0;
-        }
-
-        .auth-panel--brand p {
-            margin: 0;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        .auth-panel--brand ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            color: var(--text-muted);
-        }
-
-        .auth-form h2 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        .auth-form p {
-            margin: 0.4rem 0 1.5rem;
-            color: var(--text-muted);
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-
-        label {
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(8, 11, 25, 0.85);
-            padding: 0.9rem 1rem;
-            border-radius: var(--radius);
-            color: var(--text);
-            font-size: 1rem;
-            transition: border 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
-        }
-
-        .form-error {
-            color: #fecaca;
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            border-radius: var(--radius);
-            padding: 0.5rem 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        .btn {
-            border: none;
-            cursor: pointer;
-            border-radius: var(--radius);
-            padding: 0.95rem 1rem;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
-            color: #fff;
-            box-shadow: 0 12px 30px rgba(8, 108, 236, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 18px 35px rgba(8, 108, 236, 0.35);
-        }
-
-        .auth-meta {
-            text-align: center;
-            margin-top: 1.4rem;
-            color: var(--text-muted);
-        }
-
-        .auth-meta a {
-            color: var(--accent-secondary);
-        }
-
-        @media (max-width: 900px) {
-            .auth-panel {
-                padding: 2rem;
-            }
-        }
-    </style>
-{% endblock %}
+{% block stylesheets %}{{ include('security/_auth_styles.html.twig') }}{% endblock %}
 
 {% block body_class %}auth-page{% endblock %}
 {% block header %}{% endblock %}
 {% block main_class %}auth-main{% endblock %}
 
 {% block body %}
-    <div class="auth-layout">
-        <section class="auth-panel auth-panel--brand">
-            <div class="auth-logo">
-                <span style="color: var(--accent); font-size: 2rem;">⬢</span>
-                Patchstash Platform
-            </div>
+    <div class="auth-card">
+        <div class="floating">
+            <span class="blob a"></span>
+            <span class="blob b"></span>
+        </div>
+
+        <section class="auth-hero">
+            <span class="pill">Patchstash Platform</span>
             <h1>Launch your secure workspace</h1>
-            <p>Spin up an account to orchestrate patch cycles, score risks, and share clean reports with your team.</p>
-            <ul>
-                <li>• Role-based access out of the box</li>
-                <li>• Verification to keep accounts safe</li>
-                <li>• Built for fast onboarding</li>
-            </ul>
+            <p>Spin up an account to orchestrate patch cycles, score risks, and share audit-ready reports with your team.</p>
+            <div class="hero-points">
+                <span><span class="dot"></span>Role-aware controls</span>
+                <span><span class="dot"></span>Email verification baked in</span>
+                <span><span class="dot"></span>Built for fast onboarding</span>
+            </div>
         </section>
 
-        <section class="auth-panel">
-            <div class="auth-form">
-                <h2>Create your account</h2>
-                <p>Use a work email so your team can recognize you.</p>
+        <section class="auth-body">
+            <p class="eyebrow">Create account</p>
+            <h2 class="auth-title">Join Patchstash</h2>
+            <p class="auth-sub">Use a work email so teammates can spot you quickly.</p>
 
-                {{ form_start(registrationForm, { attr: { novalidate: 'novalidate' } }) }}
-                    <div class="form-group">
-                        {{ form_label(registrationForm.username, 'Username') }}
-                        {{ form_widget(registrationForm.username, { attr: { placeholder: 'acme.ops' } }) }}
-                        {% if form_errors(registrationForm.username) %}
-                            <div class="form-error">{{ form_errors(registrationForm.username) }}</div>
-                        {% endif %}
-                    </div>
+            {{ form_start(registrationForm, { attr: { novalidate: 'novalidate', class: 'auth-form' } }) }}
+                <div class="form-group">
+                    {{ form_label(registrationForm.username, 'Username') }}
+                    {{ form_widget(registrationForm.username, { attr: { placeholder: 'acme.ops' } }) }}
+                    {% if form_errors(registrationForm.username) %}
+                        <div class="form-error">{{ form_errors(registrationForm.username) }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.email, 'Email') }}
-                        {{ form_widget(registrationForm.email, { attr: { placeholder: 'you@company.com' } }) }}
-                        {% if form_errors(registrationForm.email) %}
-                            <div class="form-error">{{ form_errors(registrationForm.email) }}</div>
-                        {% endif %}
-                    </div>
+                <div class="form-group">
+                    {{ form_label(registrationForm.email, 'Email') }}
+                    {{ form_widget(registrationForm.email, { attr: { placeholder: 'you@company.com' } }) }}
+                    {% if form_errors(registrationForm.email) %}
+                        <div class="form-error">{{ form_errors(registrationForm.email) }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.plainPassword.first, 'Password') }}
-                        {{ form_widget(registrationForm.plainPassword.first, { attr: { placeholder: '••••••••' } }) }}
-                        {% if form_errors(registrationForm.plainPassword.first) %}
-                            <div class="form-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
-                        {% endif %}
-                    </div>
+                <div class="form-group">
+                    {{ form_label(registrationForm.plainPassword.first, 'Password') }}
+                    {{ form_widget(registrationForm.plainPassword.first, { attr: { placeholder: '••••••••' } }) }}
+                    {% if form_errors(registrationForm.plainPassword.first) %}
+                        <div class="form-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="form-group">
-                        {{ form_label(registrationForm.plainPassword.second, 'Repeat password') }}
-                        {{ form_widget(registrationForm.plainPassword.second, { attr: { placeholder: 'Repeat your password' } }) }}
-                    </div>
+                <div class="form-group">
+                    {{ form_label(registrationForm.plainPassword.second, 'Repeat password') }}
+                    {{ form_widget(registrationForm.plainPassword.second, { attr: { placeholder: 'Repeat your password' } }) }}
+                </div>
 
-                    <button class="btn" type="submit">Create account</button>
-                {{ form_end(registrationForm) }}
+                <button class="btn" type="submit">Create account</button>
+            {{ form_end(registrationForm) }}
 
-                <div class="auth-meta">Already have an account? <a href="{{ path('app_login') }}">Sign in</a></div>
-            </div>
+            <div class="auth-meta">Already have an account? <a href="{{ path('app_login') }}">Sign in</a></div>
         </section>
     </div>
 {% endblock %}

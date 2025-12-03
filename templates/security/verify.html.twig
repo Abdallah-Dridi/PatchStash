@@ -3,122 +3,40 @@
 {% block title %}Verify account · Patchstash{% endblock %}
 
 {% block stylesheets %}
+    {{ include('security/_auth_styles.html.twig') }}
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        :root {
-            --bg: #040818;
-            --panel: #0f1f3f;
-            --panel-alt: #14284f;
-            --border: #223259;
-            --text: #f8fafc;
-            --text-muted: #a5b4cf;
-            --accent: #a855f7;
-            --accent-secondary: #38bdf8;
-            --danger: #ef4444;
-            --radius: 14px;
-            --shadow: 0 30px 60px rgba(5, 12, 35, 0.65);
-        }
-
-        body.auth-page {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 45%), radial-gradient(circle at 15% 25%, rgba(168, 85, 247, 0.25), transparent 35%), #040818;
-            color: var(--text);
-        }
-
-        main.auth-main {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
         .auth-card {
-            width: min(520px, 100%);
-            background: rgba(8, 15, 40, 0.9);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 2.5rem;
+            width: min(620px, 100%);
+            margin: 0 auto;
+            padding: clamp(2rem, 4vw, 2.75rem);
+            background: linear-gradient(150deg, rgba(13, 18, 35, 0.96), rgba(15, 22, 45, 0.86));
         }
 
-        h2 {
-            margin: 0;
+        .code-input {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.55rem;
+            text-align: center;
+            text-transform: uppercase;
             font-size: 1.6rem;
-        }
-
-        p {
-            color: var(--text-muted);
-            margin: 0.4rem 0 1.4rem;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        label {
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        input[type="text"] {
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(8, 11, 25, 0.85);
-            padding: 0.9rem 1rem;
+            padding: 1.05rem 1.25rem;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px) center/ calc(100% / 6) 72% repeat-x,
+                rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             color: var(--text);
-            font-size: 1.1rem;
-            letter-spacing: 0.2rem;
-            text-transform: uppercase;
+            transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            caret-color: var(--accent-2);
         }
 
-        input:focus {
+        .code-input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
-        }
-
-        .btn {
-            border: none;
-            cursor: pointer;
-            border-radius: var(--radius);
-            padding: 0.95rem 1rem;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
-            color: #fff;
-            box-shadow: 0 12px 30px rgba(8, 108, 236, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn:hover {
+            border-color: rgba(124, 58, 237, 0.7);
+            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.28);
             transform: translateY(-1px);
-            box-shadow: 0 18px 35px rgba(8, 108, 236, 0.35);
         }
 
-        .alert {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #fecaca;
-            border-radius: var(--radius);
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .meta {
-            margin-top: 1rem;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .meta a {
-            color: var(--accent-secondary);
-        }
+        .meta { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
     </style>
 {% endblock %}
 
@@ -128,8 +46,14 @@
 
 {% block body %}
     <div class="auth-card">
-        <h2>Enter your verification code</h2>
-        <p>We sent a 6-digit code to <strong>{{ user.email }}</strong>. It expires at {{ user.verificationExpiresAt ? user.verificationExpiresAt|date('H:i') ~ ' UTC' : 'soon' }}.</p>
+        <div class="floating">
+            <span class="blob a"></span>
+            <span class="blob b"></span>
+        </div>
+
+        <p class="eyebrow">Verify access</p>
+        <h2 class="auth-title">Enter your verification code</h2>
+        <p class="auth-sub">We sent a 6-digit code to <strong>{{ user.email }}</strong>. It expires at {{ user.verificationExpiresAt ? user.verificationExpiresAt|date('H:i') ~ ' UTC' : 'soon' }}.</p>
 
         {% for label, messages in app.flashes %}
             {% for message in messages %}
@@ -141,16 +65,17 @@
             <div class="alert">{{ error }}</div>
         {% endif %}
 
-        <form method="post" action="{{ path('app_verify', { userId: user.id }) }}">
+        <form class="auth-form" method="post" action="{{ path('app_verify', { userId: user.id }) }}">
             <div class="form-group">
                 <label for="code">Verification code</label>
                 <input
                     id="code"
                     name="code"
+                    class="code-input"
                     type="text"
                     inputmode="numeric"
                     autocomplete="one-time-code"
-                    placeholder="123 456"
+                    placeholder="123456"
                     required
                 >
             </div>
@@ -159,8 +84,7 @@
         </form>
 
         <div class="meta">
-            Didn’t get the email? Check spam or <a href="{{ path('app_signup') }}">start over</a>.
-            <br>
+            Didn’t get the email? Check spam or <a href="{{ path('app_signup') }}">start over</a>.<br>
             Already verified? <a href="{{ path('app_login') }}">Sign in</a>.
         </div>
     </div>
