@@ -1,0 +1,12 @@
+<div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6; max-width: 520px;">
+    <h2 style="margin-bottom: 0.5rem;">Hi {{ username }},</h2>
+    <p style="margin-top: 0;">Use this code to verify your Patchstash account:</p>
+
+    <div style="margin: 1.2rem 0; padding: 1rem 1.4rem; background: #0f172a; color: #e2e8f0; border-radius: 12px; font-size: 1.4rem; letter-spacing: 0.2rem; text-align: center;">
+        {{ code }}
+    </div>
+
+    <p>This code expires at {{ expiresAt ? expiresAt|date('H:i') ~ ' UTC' : 'soon' }}. If you didn’t request this, you can safely ignore the email.</p>
+
+    <p style="margin-top: 1.5rem;">Thanks,<br>The Patchstash team</p>
+</div>

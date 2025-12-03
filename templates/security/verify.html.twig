@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Verify account · Patchstash{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg: #040818;
+            --panel: #0f1f3f;
+            --panel-alt: #14284f;
+            --border: #223259;
+            --text: #f8fafc;
+            --text-muted: #a5b4cf;
+            --accent: #a855f7;
+            --accent-secondary: #38bdf8;
+            --danger: #ef4444;
+            --radius: 14px;
+            --shadow: 0 30px 60px rgba(5, 12, 35, 0.65);
+        }
+
+        body.auth-page {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.15), transparent 45%), radial-gradient(circle at 15% 25%, rgba(168, 85, 247, 0.25), transparent 35%), #040818;
+            color: var(--text);
+        }
+
+        main.auth-main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            width: min(520px, 100%);
+            background: rgba(8, 15, 40, 0.9);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2.5rem;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin: 0.4rem 0 1.4rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(8, 11, 25, 0.85);
+            padding: 0.9rem 1rem;
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 1.1rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            border-radius: var(--radius);
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(120deg, var(--accent), var(--accent-secondary));
+            color: #fff;
+            box-shadow: 0 12px 30px rgba(8, 108, 236, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 35px rgba(8, 108, 236, 0.35);
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #fecaca;
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .meta a {
+            color: var(--accent-secondary);
+        }
+    </style>
+{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+{% block header %}{% endblock %}
+{% block main_class %}auth-main{% endblock %}
+
+{% block body %}
+    <div class="auth-card">
+        <h2>Enter your verification code</h2>
+        <p>We sent a 6-digit code to <strong>{{ user.email }}</strong>. It expires at {{ user.verificationExpiresAt ? user.verificationExpiresAt|date('H:i') ~ ' UTC' : 'soon' }}.</p>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {% if error %}
+            <div class="alert">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="{{ path('app_verify', { userId: user.id }) }}">
+            <div class="form-group">
+                <label for="code">Verification code</label>
+                <input
+                    id="code"
+                    name="code"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    placeholder="123 456"
+                    required
+                >
+            </div>
+
+            <button class="btn" type="submit">Verify account</button>
+        </form>
+
+        <div class="meta">
+            Didn’t get the email? Check spam or <a href="{{ path('app_signup') }}">start over</a>.
+            <br>
+            Already verified? <a href="{{ path('app_login') }}">Sign in</a>.
+        </div>
+    </div>
+{% endblock %}

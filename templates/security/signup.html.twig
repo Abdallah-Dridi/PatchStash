@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sign in · Patchstash{% endblock %}
+{% block title %}Create account · Patchstash{% endblock %}
 
 {% block stylesheets %}
     <style>
@@ -134,6 +134,7 @@
         }
 
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             border: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(8, 11, 25, 0.85);
@@ -150,44 +151,13 @@
             box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
         }
 
-        .auth-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .form-error {
+            color: #fecaca;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: var(--radius);
+            padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
-            color: var(--text-muted);
-            gap: 1rem;
-        }
-
-        .toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: not-allowed;
-            user-select: none;
-        }
-
-        .toggle input {
-            display: none;
-        }
-
-        .toggle__track {
-            width: 36px;
-            height: 18px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.2);
-            position: relative;
-        }
-
-        .toggle__thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--text);
-            position: absolute;
-            top: 1px;
-            left: 2px;
-            transition: transform 0.2s ease;
         }
 
         .btn {
@@ -218,24 +188,9 @@
             color: var(--accent-secondary);
         }
 
-        .alert {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #fecaca;
-            border-radius: var(--radius);
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
         @media (max-width: 900px) {
             .auth-panel {
                 padding: 2rem;
-            }
-
-            .auth-actions {
-                flex-direction: column;
-                align-items: flex-start;
             }
         }
     </style>
@@ -252,69 +207,54 @@
                 <span style="color: var(--accent); font-size: 2rem;">⬢</span>
                 Patchstash Platform
             </div>
-            <h1>Enterprise-grade Patch &amp; Vulnerability Intelligence</h1>
-            <p>
-                Track risk, orchestrate patch cycles, and unlock unified reporting with a single, secure workspace.
-            </p>
+            <h1>Launch your secure workspace</h1>
+            <p>Spin up an account to orchestrate patch cycles, score risks, and share clean reports with your team.</p>
             <ul>
-                <li>• Real-time risk scoring</li>
-                <li>• Smart patch orchestration</li>
-                <li>• Integrated reporting</li>
+                <li>• Role-based access out of the box</li>
+                <li>• Verification to keep accounts safe</li>
+                <li>• Built for fast onboarding</li>
             </ul>
         </section>
 
         <section class="auth-panel">
             <div class="auth-form">
-                <h2>Welcome back</h2>
-                <p>Sign in to continue to Patchstash.</p>
+                <h2>Create your account</h2>
+                <p>Use a work email so your team can recognize you.</p>
 
-                {% if error %}
-                    <div class="alert">
-                        {{ error.messageKey|trans(error.messageData, 'security') }}
-                    </div>
-                {% endif %}
-
-                <form method="post" action="{{ path('app_login') }}">
+                {{ form_start(registrationForm, { attr: { novalidate: 'novalidate' } }) }}
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input
-                            id="username"
-                            name="_username"
-                            type="text"
-                            value="{{ last_username }}"
-                            placeholder="admin"
-                            autocomplete="username"
-                            required
-                        >
+                        {{ form_label(registrationForm.username, 'Username') }}
+                        {{ form_widget(registrationForm.username, { attr: { placeholder: 'acme.ops' } }) }}
+                        {% if form_errors(registrationForm.username) %}
+                            <div class="form-error">{{ form_errors(registrationForm.username) }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input
-                            id="password"
-                            name="_password"
-                            type="password"
-                            placeholder="••••••••"
-                            autocomplete="current-password"
-                            required
-                        >
+                        {{ form_label(registrationForm.email, 'Email') }}
+                        {{ form_widget(registrationForm.email, { attr: { placeholder: 'you@company.com' } }) }}
+                        {% if form_errors(registrationForm.email) %}
+                            <div class="form-error">{{ form_errors(registrationForm.email) }}</div>
+                        {% endif %}
                     </div>
 
-                    <div class="auth-actions">
-                        <label class="toggle">
-                            <input type="checkbox" disabled>
-                            <span class="toggle__track"><span class="toggle__thumb"></span></span>
-                            <span>Remember me</span>
-                        </label>
-                        <a href="#" class="text-muted">Forgot password?</a>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.first, 'Password') }}
+                        {{ form_widget(registrationForm.plainPassword.first, { attr: { placeholder: '••••••••' } }) }}
+                        {% if form_errors(registrationForm.plainPassword.first) %}
+                            <div class="form-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                        {% endif %}
                     </div>
 
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.second, 'Repeat password') }}
+                        {{ form_widget(registrationForm.plainPassword.second, { attr: { placeholder: 'Repeat your password' } }) }}
+                    </div>
 
-                    <button class="btn" type="submit">Sign in</button>
-                </form>
+                    <button class="btn" type="submit">Create account</button>
+                {{ form_end(registrationForm) }}
 
-                <div class="auth-meta">New to Patchstash? <a href="{{ path('app_signup') }}">Create an account</a></div>
+                <div class="auth-meta">Already have an account? <a href="{{ path('app_login') }}">Sign in</a></div>
             </div>
         </section>
     </div>
