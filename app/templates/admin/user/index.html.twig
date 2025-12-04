@@ -1,0 +1,59 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Users · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
+        <h1>Users</h1>
+        <p class="text-muted">Accounts and roles for the platform.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
+        <a class="btn primary" href="{{ path('app_admin_users_new') }}">New user</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All users</h2>
+            <p class="text-muted">Role assignments and project ownership.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Projects</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td><strong>{{ user.username }}</strong></td>
+                    <td class="text-muted">{{ user.email }}</td>
+                    <td><span class="badge neutral">{{ user.role }}</span></td>
+                    <td><span class="badge neutral">{{ user.projects|length }} linked</span></td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_admin_users_show', {'id': user.id}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_admin_users_edit', {'id': user.id}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted">No users found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

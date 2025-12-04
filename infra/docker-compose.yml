@@ -1,0 +1,79 @@
+services:
+  php:
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile
+    container_name: patchstash-php
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: "mysql://root:root@mysql:3306/patchstash?serverVersion=8.0.33&charset=utf8mb4"
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: patchstash
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      AUTO_MIGRATE: "1"
+      AUTO_WARM_CACHE: "1"
+    volumes:
+      - ../app:/var/www/html
+      - composer-cache:/tmp/composer
+    depends_on:
+      mysql:
+        condition: service_started
+    networks:
+      - patchstash-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: patchstash-nginx
+    depends_on:
+      php:
+        condition: service_started
+    ports:
+      - "8080:80"
+    volumes:
+      - ../app:/var/www/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - patchstash-network
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0.33
+    container_name: patchstash-mysql
+    command: --event-scheduler=ON
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: patchstash
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    networks:
+      - patchstash-network
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: patchstash-phpmyadmin
+    depends_on:
+      mysql:
+        condition: service_started
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    networks:
+      - patchstash-network
+    restart: unless-stopped
+
+networks:
+  patchstash-network:
+    name: patchstash-network
+
+volumes:
+  mysql-data:
+  composer-cache:

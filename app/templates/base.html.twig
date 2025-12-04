@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+            <style>
+                body.layout {
+                    margin: 0;
+                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                    background: #0b1224;
+                    color: #e5e7eb;
+                    min-height: 100vh;
+                }
+                .shell { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+                .topnav {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 1rem 0;
+                }
+                .topnav a { color: #e5e7eb; text-decoration: none; margin-left: 1rem; }
+                .topnav .brand { font-weight: 700; letter-spacing: 0.04em; }
+                .nav-links { display: flex; align-items: center; gap: 0.75rem; }
+                .muted { color: #9ca3af; }
+                main.shell { padding-top: 1rem; }
+            </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body class="{% block body_class %}layout{% endblock %}">
+        {% block header %}
+            <header class="shell">
+                <nav class="topnav">
+                    <a href="{{ path('app_dashboard') }}" class="brand">Patchstash</a>
+                    <div class="nav-links">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_admin_dashboard') }}">Admin</a>
+                        {% endif %}
+                        {% if app.user %}
+                            <span class="muted">Hi {{ app.user.username }}</span>
+                            <a href="{{ path('app_logout') }}">Logout</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}">Login</a>
+                        {% endif %}
+                    </div>
+                </nav>
+            </header>
+        {% endblock %}
+        <main class="{% block main_class %}shell{% endblock %}">
+            {% block body %}{% endblock %}
+        </main>
+    </body>
+</html>

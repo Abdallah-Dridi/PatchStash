@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Verify account · Patchstash{% endblock %}
+
+{% block stylesheets %}
+    {{ include('security/_auth_styles.html.twig') }}
+    <style>
+        .auth-card {
+            width: min(640px, 100%);
+            margin: 0 auto;
+            padding: clamp(2.2rem, 4vw, 3rem);
+            background: linear-gradient(150deg, rgba(13, 18, 35, 0.96), rgba(15, 22, 45, 0.86));
+        }
+
+        .code-input {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.42rem;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 1.7rem;
+            padding: 1.15rem 1.3rem;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px) center/ calc(100% / 6) 68% repeat-x,
+                rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            caret-color: var(--accent-2);
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: rgba(124, 58, 237, 0.7);
+            box-shadow: 0 22px 55px rgba(124, 58, 237, 0.28);
+            transform: translateY(-1px);
+        }
+
+        .code-hint {
+            margin: -0.4rem 0 0.4rem;
+            color: var(--muted);
+            font-size: 0.93rem;
+        }
+
+        .meta { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+    </style>
+{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+{% block header %}{% endblock %}
+{% block main_class %}auth-main{% endblock %}
+
+{% block body %}
+    <div class="auth-card">
+        <div class="floating">
+            <span class="blob a"></span>
+            <span class="blob b"></span>
+        </div>
+
+        <p class="eyebrow">Verify access</p>
+        <h2 class="auth-title">Enter your verification code</h2>
+        <p class="auth-sub">We sent a 6-digit code to <strong>{{ user.email }}</strong>. It expires at {{ user.verificationExpiresAt ? user.verificationExpiresAt|date('H:i') ~ ' UTC' : 'soon' }}.</p>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {% if error %}
+            <div class="alert">{{ error }}</div>
+        {% endif %}
+
+        <form class="auth-form" method="post" action="{{ path('app_verify', { userId: user.id }) }}">
+            <div class="form-group">
+                <label for="code">Verification code</label>
+                <p class="code-hint">Enter the 6 digits from your email. The code is case-insensitive.</p>
+                <input
+                    id="code"
+                    name="code"
+                    class="code-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    placeholder="123456"
+                    required
+                >
+            </div>
+
+            <button class="btn" type="submit">Verify account</button>
+        </form>
+
+        <div class="meta">
+            Didn’t get the email? Check spam or <a href="{{ path('app_signup') }}">start over</a>.<br>
+            Already verified? <a href="{{ path('app_login') }}">Sign in</a>.
+        </div>
+    </div>
+{% endblock %}

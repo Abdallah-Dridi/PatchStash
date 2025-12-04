@@ -1,0 +1,16 @@
+{{ form_start(form, {'attr': {'class': 'admin-panel'}}) }}
+    <h2 style="margin-top:0;">Asset details</h2>
+    <div class="form-grid">
+        <div>{{ form_row(form.name) }}</div>
+        <div>{{ form_row(form.module) }}</div>
+        <div>{{ form_row(form.type) }}</div>
+        <div>{{ form_row(form.environment) }}</div>
+        <div>{{ form_row(form.status) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.description) }}</div>
+        <div style="grid-column: 1 / -1;">{{ form_row(form.info) }}</div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_asset_index') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save asset') }}</button>
+    </div>
+{{ form_end(form) }}

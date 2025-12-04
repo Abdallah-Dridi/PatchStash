@@ -1,22 +1,27 @@
 
 ###> symfony/framework-bundle ###
+/app/.env
+/app/.env.local
+/app/.env.*.local
+/app/config/secrets/prod/prod.decrypt.private.php
+/app/public/bundles/
+/app/var/
+/app/vendor/
 .env
 .env.local
 .env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
+/app/phpunit.xml
+/app/.phpunit.cache/
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
+/app/public/assets/
+/app/assets/vendor/
 ###< symfony/asset-mapper ###
 
 ###> IDE & Editor ###
@@ -33,6 +38,9 @@ Thumbs.db
 ###< OS ###
 
 ###> Dependencies & Build ###
+/app/node_modules/
+/app/npm-debug.log
+/app/yarn-error.log
 /node_modules/
 /npm-debug.log
 /yarn-error.log
@@ -40,6 +48,7 @@ Thumbs.db
 
 ###> Local Configuration ###
 docker-compose.override.yaml
+/app/docker-compose.override.yaml
 /.phpunit.xml
 /upload/
 /storage/

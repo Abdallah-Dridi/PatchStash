@@ -1,0 +1,70 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Projects · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
+        <h1>Projects</h1>
+        <p class="text-muted">Overview of all tracked projects.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_dashboard') }}">Dashboard</a>
+        <a class="btn primary" href="{{ path('app_project_new') }}">New project</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All projects</h2>
+            <p class="text-muted">Owners, status, and linked modules.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Modules</th>
+                    <th>Info</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+                {% set status = project.status|default('Pending') %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Deprecated': 'deprecated',
+                    'Failed': 'failed'
+                }[status]|default('pending') %}
+                <tr>
+                    <td>
+                        <strong>{{ project.name }}</strong>
+                    </td>
+                    <td class="text-muted">{{ project.user ? project.user.username : 'Unassigned' }}</td>
+                    <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
+                    <td><span class="badge neutral">{{ project.modules|length }} modules</span></td>
+                    <td class="text-muted">{{ project.info ? project.info|u.truncate(60, '…') : '—' }}</td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_project_show', {'id': project.id}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_project_edit', {'id': project.id}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-muted">No projects found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

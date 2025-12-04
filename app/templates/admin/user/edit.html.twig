@@ -1,0 +1,18 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Edit</p>
+        <h1>Edit user</h1>
+        <p class="text-muted">Update role, email, or password.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_users') }}">Back</a>
+    </div>
+</div>
+
+{{ include('admin/user/_form.html.twig', {'button_label': 'Update user'}) }}
+{% endblock %}
