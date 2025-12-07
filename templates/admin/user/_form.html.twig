@@ -1,16 +1,30 @@
-{{ form_start(form, {'attr': {'class': 'admin-panel'}}) }}
-    <h2 style="margin-top:0;">User details</h2>
+{{ form_start(form, {'attr': {'class': 'admin-panel', 'novalidate': 'novalidate'}}) }}
+    <h2>User Details</h2>
     <div class="form-grid">
-        <div>{{ form_row(form.username) }}</div>
-        <div>{{ form_row(form.email) }}</div>
-        <div>{{ form_row(form.role) }}</div>
         <div>
-            {{ form_row(form.plainPassword) }}
-            <p class="text-muted" style="font-size:0.85rem; margin:0.35rem 0 0;">Leave blank to keep the current password.</p>
+            {{ form_label(form.username, 'Username') }}
+            {{ form_widget(form.username, {'attr': {'placeholder': 'Enter username'}}) }}
+            {{ form_errors(form.username) }}
+        </div>
+        <div>
+            {{ form_label(form.email, 'Email Address') }}
+            {{ form_widget(form.email, {'attr': {'placeholder': 'user@example.com'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div>
+            {{ form_label(form.role, 'Role') }}
+            {{ form_widget(form.role) }}
+            {{ form_errors(form.role) }}
+        </div>
+        <div>
+            {{ form_label(form.plainPassword, 'Password') }}
+            {{ form_widget(form.plainPassword, {'attr': {'placeholder': '••••••••'}}) }}
+            {{ form_errors(form.plainPassword) }}
+            <p class="text-muted">Leave blank to keep current password.</p>
         </div>
     </div>
     <div class="form-footer">
         <a class="btn ghost" href="{{ path('app_admin_users') }}">Cancel</a>
-        <button class="btn primary">{{ button_label|default('Save user') }}</button>
+        <button class="btn primary">{{ button_label|default('Save User') }}</button>
     </div>
 {{ form_end(form) }}

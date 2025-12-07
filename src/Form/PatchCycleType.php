@@ -17,8 +17,15 @@ class PatchCycleType extends AbstractType
             ->add('cycleId')
             ->add('status')
             ->add('description')
-            ->add('deadline')
-            ->add('appliedDate')
+            ->add('deadline', \Symfony\Component\Form\Extension\Core\Type\DateType::class, [
+                'widget' => 'single_text',
+                'html5' => true,
+            ])
+            ->add('appliedDate', \Symfony\Component\Form\Extension\Core\Type\DateType::class, [
+                'widget' => 'single_text',
+                'html5' => true,
+                'required' => false,
+            ])
             ->add('cvss')
             ->add('info')
             ->add('asset', EntityType::class, [
