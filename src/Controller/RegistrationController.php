@@ -31,44 +31,62 @@ final class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(SignUpType::class, $user);
         $form->handleRequest($request);
+        
+        $formError = null;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                (string) $form->get('plainPassword')->getData()
-            );
 
-            $user->setPassword($hashedPassword);
-            $user->setRole('ROLE_USER');
-            $user->setIsVerified(false);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    (string) $form->get('plainPassword')->getData()
+                );
 
-            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            $user->setVerificationCode($code);
-            $user->setVerificationExpiresAt(new \DateTimeImmutable('+15 minutes'));
+                $user->setPassword($hashedPassword);
+                $user->setRole('ROLE_USER');
+                $user->setIsVerified(false);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+                $user->setVerificationCode($code);
+                $user->setVerificationExpiresAt(new \DateTimeImmutable('+15 minutes'));
 
-            $email = (new TemplatedEmail())
-                ->from($fromAddress)
-                ->to($user->getEmail())
-                ->subject('Your Patchstash verification code')
-                ->htmlTemplate('email/verification.html.twig')
-                ->context([
-                    'username' => $user->getUsername(),
-                    'code' => $code,
-                    'expiresAt' => $user->getVerificationExpiresAt(),
-                ]);
+                try {
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    
+                    // Try to send verification email
+                    try {
+                        $email = (new TemplatedEmail())
+                            ->from($fromAddress)
+                            ->to($user->getEmail())
+                            ->subject('Your Patchstash verification code')
+                            ->htmlTemplate('email/verification.html.twig')
+                            ->context([
+                                'username' => $user->getUsername(),
+                                'code' => $code,
+                                'expiresAt' => $user->getVerificationExpiresAt(),
+                            ]);
 
-            $mailer->send($email);
+                        $mailer->send($email);
+                    } catch (\Exception $e) {
+                        // Silently ignore email failures
+                    }
 
-            return $this->redirectToRoute('app_verify', [
-                'userId' => $user->getId(),
-            ]);
+                    return $this->redirectToRoute('app_verify', [
+                        'userId' => $user->getId(),
+                    ]);
+                } catch (\Exception $e) {
+                    // Generic error - catches duplicate username/email without revealing which
+                    $formError = 'Unable to create account. Please try again.';
+                }
+            } else {
+                $formError = 'Please check your information and try again.';
+            }
         }
 
         return $this->render('security/signup.html.twig', [
             'registrationForm' => $form->createView(),
+            'error' => $formError,
         ]);
     }
 

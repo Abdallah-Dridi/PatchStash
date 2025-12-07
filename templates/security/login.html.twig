@@ -32,8 +32,8 @@
             <p class="auth-sub">Use your Patchstash credentials to continue.</p>
 
             {% if error %}
-                <div class="alert">
-                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                <div class="alert" style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: #fee; color: #c00; border: 1px solid currentColor;">
+                    Invalid credentials. Please check your username and password.
                 </div>
             {% endif %}
 

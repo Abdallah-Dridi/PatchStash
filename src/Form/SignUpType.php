@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -10,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class SignUpType extends AbstractType
 {
@@ -19,10 +22,28 @@ class SignUpType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'constraints' => [new NotBlank(), new Length(['min' => 3, 'max' => 50])],
+                'constraints' => [
+                    new NotBlank(['message' => 'Please enter a username']),
+                    new Length([
+                        'min' => 3,
+                        'max' => 50,
+                        'minMessage' => 'Username must be at least {{ limit }} characters',
+                        'maxMessage' => 'Username cannot be longer than {{ limit }} characters'
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9_-]+$/',
+                        'message' => 'Username can only contain letters, numbers, underscores, and hyphens'
+                    ])
+                ],
             ])
             ->add('email', EmailType::class, [
-                'constraints' => [new NotBlank()],
+                'constraints' => [
+                    new NotBlank(['message' => 'Please enter an email address']),
+                    new Email([
+                        'mode' => 'strict',
+                        'message' => 'Please enter a valid email address'
+                    ])
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -30,7 +51,14 @@ class SignUpType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
-                'constraints' => [new NotBlank(), new Length(['min' => 8, 'max' => 4096])],
+                'constraints' => [
+                    new NotBlank(['message' => 'Please enter a password']),
+                    new Length([
+                        'min' => 8,
+                        'max' => 4096,
+                        'minMessage' => 'Password must be at least {{ limit }} characters'
+                    ])
+                ],
             ]);
     }
 

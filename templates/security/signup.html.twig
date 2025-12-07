@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme registrationForm 'form/form_errors.html.twig' %}
+
 {% block title %}Create account · Patchstash{% endblock %}
 
 {% block stylesheets %}{{ include('security/_auth_styles.html.twig') }}{% endblock %}
@@ -31,38 +33,93 @@
             <h2 class="auth-title">Join Patchstash</h2>
             <p class="auth-sub">Use a work email so teammates can spot you quickly.</p>
 
-            {{ form_start(registrationForm, { attr: { novalidate: 'novalidate', class: 'auth-form' } }) }}
+            {# Error message display #}
+            <div id="signup-error" style="display: none; padding: 1rem; margin-bottom: 1rem; border-radius: 18px; background: rgba(239, 68, 68, 0.12); color: #fecaca; border: 1px solid rgba(239, 68, 68, 0.35);"></div>
+
+            {{ form_start(registrationForm, { attr: { id: 'signup-form', class: 'auth-form' } }) }}
                 <div class="form-group">
                     {{ form_label(registrationForm.username, 'Username') }}
-                    {{ form_widget(registrationForm.username, { attr: { placeholder: 'acme.ops' } }) }}
-                    {% if form_errors(registrationForm.username) %}
-                        <div class="form-error">{{ form_errors(registrationForm.username) }}</div>
-                    {% endif %}
+                    {{ form_widget(registrationForm.username, { attr: { placeholder: 'acme.ops', id: 'username-field' } }) }}
                 </div>
 
                 <div class="form-group">
                     {{ form_label(registrationForm.email, 'Email') }}
-                    {{ form_widget(registrationForm.email, { attr: { placeholder: 'you@company.com' } }) }}
-                    {% if form_errors(registrationForm.email) %}
-                        <div class="form-error">{{ form_errors(registrationForm.email) }}</div>
-                    {% endif %}
+                    {{ form_widget(registrationForm.email, { attr: { placeholder: 'you@company.com', id: 'email-field' } }) }}
                 </div>
 
                 <div class="form-group">
                     {{ form_label(registrationForm.plainPassword.first, 'Password') }}
-                    {{ form_widget(registrationForm.plainPassword.first, { attr: { placeholder: '••••••••' } }) }}
-                    {% if form_errors(registrationForm.plainPassword.first) %}
-                        <div class="form-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
-                    {% endif %}
+                    {{ form_widget(registrationForm.plainPassword.first, { attr: { placeholder: '••••••••', id: 'password-field' } }) }}
+                    <small style="display: block; margin-top: 0.25rem; color: #888;">Minimum 8 characters</small>
                 </div>
 
                 <div class="form-group">
                     {{ form_label(registrationForm.plainPassword.second, 'Repeat password') }}
-                    {{ form_widget(registrationForm.plainPassword.second, { attr: { placeholder: 'Repeat your password' } }) }}
+                    {{ form_widget(registrationForm.plainPassword.second, { attr: { placeholder: 'Repeat your password', id: 'password-confirm-field' } }) }}
                 </div>
 
                 <button class="btn" type="submit">Create account</button>
             {{ form_end(registrationForm) }}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('form.auth-form');
+                    const errorDiv = document.getElementById('signup-error');
+                    
+                    if (!form || !errorDiv) return;
+                    
+                    form.addEventListener('submit', function(e) {
+                        const username = form.querySelector('input[name*="username"]');
+                        const email = form.querySelector('input[type="email"]');
+                        const password = form.querySelector('input[name*="plainPassword"][name*="first"]');
+                        const passwordConfirm = form.querySelector('input[name*="plainPassword"][name*="second"]');
+                        
+                        // Clear previous errors
+                        errorDiv.style.display = 'none';
+                        errorDiv.textContent = '';
+                        
+                        // Validate username
+                        if (username && (username.value.trim().length < 3 || username.value.trim().length > 50)) {
+                            e.preventDefault();
+                            errorDiv.textContent = 'Username must be between 3 and 50 characters.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+                        
+                        if (username && !/^[a-zA-Z0-9_-]+$/.test(username.value.trim())) {
+                            e.preventDefault();
+                            errorDiv.textContent = 'Username can only contain letters, numbers, underscores, and hyphens.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+                        
+                        // Validate email
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (email && !emailRegex.test(email.value.trim())) {
+                            e.preventDefault();
+                            errorDiv.textContent = 'Please enter a valid email address.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+                        
+                        // Validate password
+                        if (password && password.value.length < 8) {
+                            e.preventDefault();
+                            errorDiv.textContent = 'Password must be at least 8 characters long.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+                        
+                        // Validate password match
+                        if (password && passwordConfirm && password.value !== passwordConfirm.value) {
+                            e.preventDefault();
+                            errorDiv.textContent = 'Passwords do not match.';
+                            errorDiv.style.display = 'block';
+                            return;
+                        }
+                    });
+                });
+            </script>
 
             <div class="auth-meta">Already have an account? <a href="{{ path('app_login') }}">Sign in</a></div>
         </section>
