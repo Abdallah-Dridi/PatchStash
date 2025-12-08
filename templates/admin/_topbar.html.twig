@@ -5,7 +5,22 @@
         <p class="text-muted">Monitor posture and trigger workflows from one place.</p>
     </div>
     <div class="admin-topbar-actions">
-        <button class="btn ghost" disabled>Export data</button>
-        <button class="btn primary" disabled>Create report</button>
+        {# Determine current admin entity from route: defaults to 'all' for dashboard #}
+        {% set route = app.request.attributes.get('_route')|default('') %}
+        {% set entity = route|replace({'app_admin_':''})|split('_')|first|default('all') %}
+        {% if entity == 'dashboard' %}
+            {% set entity = 'all' %}
+        {% endif %}
+
+        <div class="dropdown inline">
+            <button class="btn ghost" type="button" onclick="document.querySelector('.dropdown-menu').classList.toggle('open')">Export data
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:8px"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            <div class="dropdown-menu" onclick="this.classList.remove('open')">
+                <a class="dropdown-item" href="{{ path('app_export_entity', {'entity': entity, '_format': 'json'}) }}">JSON</a>
+                <a class="dropdown-item" href="{{ path('app_export_entity', {'entity': entity, '_format': 'csv'}) }}">CSV</a>
+            </div>
+        </div>
     </div>
 </header>
