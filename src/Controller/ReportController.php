@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Report;
 use App\Repository\ReportRepository;
 use App\Repository\ProjectRepository;
+use App\Service\PermissionChecker;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +17,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class ReportController extends AbstractController
 {
     #[Route('/admin/reports/new', name: 'app_admin_reports_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProjectRepository $projectRepository, ReportRepository $reportRepository): Response
+    public function new(Request $request, ProjectRepository $projectRepository, ReportRepository $reportRepository, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_report', 'app_dashboard');
+        if ($redirect) return $redirect;
         $report = new Report();
 
         $form = $this->createFormBuilder($report)

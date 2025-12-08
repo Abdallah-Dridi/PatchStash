@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
+use App\Service\PermissionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +24,10 @@ final class ProjectController extends AbstractController
     }
 
     #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_project', 'app_project_index');
+        if ($redirect) return $redirect;
         $project = new Project();
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
@@ -51,8 +54,10 @@ final class ProjectController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_project_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('edit_project', 'app_project_index');
+        if ($redirect) return $redirect;
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -69,8 +74,10 @@ final class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
-    public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Project $project, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('delete_project', 'app_project_index');
+        if ($redirect) return $redirect;
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($project);
             $entityManager->flush();

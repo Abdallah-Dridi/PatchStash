@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\PatchCycle;
 use App\Form\PatchCycleType;
 use App\Repository\PatchCycleRepository;
+use App\Service\PermissionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +24,10 @@ final class PatchCycleController extends AbstractController
     }
 
     #[Route('/new', name: 'app_patch_cycle_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_patch_cycle', 'app_patch_cycle_index');
+        if ($redirect) return $redirect;
         $patchCycle = new PatchCycle();
         $form = $this->createForm(PatchCycleType::class, $patchCycle);
         $form->handleRequest($request);
@@ -51,8 +54,10 @@ final class PatchCycleController extends AbstractController
     }
 
     #[Route('/{cycleId}/edit', name: 'app_patch_cycle_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, PatchCycle $patchCycle, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, PatchCycle $patchCycle, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('edit_patch_cycle', 'app_patch_cycle_index');
+        if ($redirect) return $redirect;
         $form = $this->createForm(PatchCycleType::class, $patchCycle);
         $form->handleRequest($request);
 
@@ -69,8 +74,10 @@ final class PatchCycleController extends AbstractController
     }
 
     #[Route('/{cycleId}', name: 'app_patch_cycle_delete', methods: ['POST'])]
-    public function delete(Request $request, PatchCycle $patchCycle, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, PatchCycle $patchCycle, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('delete_patch_cycle', 'app_patch_cycle_index');
+        if ($redirect) return $redirect;
         if ($this->isCsrfTokenValid('delete'.$patchCycle->getCycleId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($patchCycle);
             $entityManager->flush();

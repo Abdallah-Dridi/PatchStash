@@ -444,4 +444,190 @@
         color: #e5e7eb;
         margin-bottom: 1rem;
     }
+
+    /* Roles & Permissions Styles */
+    .role-card {
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: linear-gradient(135deg, rgba(26, 35, 63, 0.9), rgba(15, 23, 42, 0.85));
+        padding: 1.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .role-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(88, 28, 135, 0.25);
+    }
+
+    .role-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .role-header h3 {
+        margin: 0;
+        color: #f8fafc;
+        font-size: 1.1rem;
+    }
+
+    .btn.small {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    .role-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .permission-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .permission-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        background: rgba(168, 85, 247, 0.1);
+        border-left: 3px solid rgba(168, 85, 247, 0.5);
+    }
+
+    .permission-name {
+        font-weight: 500;
+        color: #e5e7eb;
+        font-size: 0.9rem;
+    }
+
+    .permission-category {
+        font-size: 0.75rem;
+        color: #cbd5e1;
+        background: rgba(148, 163, 184, 0.15);
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .permission-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .permission-groups {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .permission-group {
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        padding: 1.5rem;
+        background: rgba(15, 23, 42, 0.5);
+    }
+
+    .permission-group-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .permission-group h3 {
+        margin: 0;
+        font-size: 1rem;
+        color: #a5b4fc;
+        text-transform: capitalize;
+    }
+
+    .permission-group-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .permission-group-controls .btn-link {
+        background: none;
+        border: none;
+        color: #38bdf8;
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 0;
+        text-decoration: underline;
+        transition: color 0.2s ease;
+        font-weight: 500;
+    }
+
+    .permission-group-controls .btn-link:hover {
+        color: #7dd3fc;
+    }
+
+    .permission-group-controls .separator {
+        color: rgba(148, 163, 184, 0.3);
+        margin: 0 0.3rem;
+    }
+
+    .permission-checkbox-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 0.8rem;
+    }
+
+    .permission-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .permission-checkbox:hover {
+        background: rgba(168, 85, 247, 0.1);
+    }
+
+    .permission-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin: 0.2rem 0 0 0;
+        cursor: pointer;
+        accent-color: var(--accent);
+        flex-shrink: 0;
+    }
+
+    .checkbox-label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        color: #e5e7eb;
+    }
+
+    .checkbox-label strong {
+        color: #f8fafc;
+        font-weight: 600;
+    }
+
+    .checkbox-label small {
+        color: #9ca3af;
+        font-size: 0.8rem;
+    }
     </style>

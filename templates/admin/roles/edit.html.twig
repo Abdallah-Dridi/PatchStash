@@ -1,0 +1,81 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Edit {{ role }} Permissions · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Roles & Permissions</p>
+        <h1>Edit {{ role }} Permissions</h1>
+        <p class="text-muted">Select which permissions this role should have.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_roles') }}">Back to roles</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <form method="post" class="permission-form">
+        <div class="permission-groups">
+            {% set currentCategory = null %}
+            {% for permission in permissions %}
+                {% if permission.category != currentCategory %}
+                    {% if currentCategory is not null %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% set currentCategory = permission.category %}
+                    <div class="permission-group">
+                        <div class="permission-group-header">
+                            <h3>{{ currentCategory|capitalize }}</h3>
+                            <div class="permission-group-controls">
+                                <button type="button" class="btn-link" onclick="selectAllInGroup(this, true)">Select All</button>
+                                <span class="separator">|</span>
+                                <button type="button" class="btn-link" onclick="selectAllInGroup(this, false)">Deselect All</button>
+                            </div>
+                        </div>
+                        <div class="permission-checkbox-list">
+                {% endif %}
+
+                <label class="permission-checkbox">
+                    <input type="checkbox" 
+                           name="permissions[]" 
+                           value="{{ permission.permissionId }}"
+                           {% if permission.permissionId in selectedPermissionIds %}checked{% endif %} />
+                    <span class="checkbox-label">
+                        <strong>{{ permission.name }}</strong>
+                        {% if permission.description %}
+                            <br/><small class="text-muted">{{ permission.description }}</small>
+                        {% endif %}
+                    </span>
+                </label>
+            {% endfor %}
+            {% if currentCategory is not null %}
+                        </div>
+                    </div>
+            {% endif %}
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" class="btn primary">Save Permissions</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function selectAllInGroup(button, selectAll) {
+    event.preventDefault();
+    
+    // Find the closest permission-group container
+    const group = button.closest('.permission-group');
+    
+    // Find all checkboxes in this group
+    const checkboxes = group.querySelectorAll('.permission-checkbox input[type="checkbox"]');
+    
+    // Set all checkboxes to the desired state
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll;
+    });
+}
+</script>
+{% endblock %}

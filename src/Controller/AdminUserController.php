@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\AdminUserType;
 use App\Repository\UserRepository;
+use App\Service\PermissionChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +26,10 @@ final class AdminUserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_users_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_user', 'app_admin_users');
+        if ($redirect) return $redirect;
         $user = new User();
         $form = $this->createForm(AdminUserType::class, $user);
         $form->handleRequest($request);
@@ -57,8 +60,10 @@ final class AdminUserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_users_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('edit_user', 'app_admin_users');
+        if ($redirect) return $redirect;
         $form = $this->createForm(AdminUserType::class, $user, [
             'require_password' => false,
         ]);
@@ -82,8 +87,10 @@ final class AdminUserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_users_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, User $user, UserRepository $userRepository, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('delete_user', 'app_admin_users');
+        if ($redirect) return $redirect;
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
             $userRepository->remove($user, true);
         }

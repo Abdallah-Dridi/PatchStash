@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Asset;
 use App\Form\AssetType;
 use App\Repository\AssetRepository;
+use App\Service\PermissionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +24,10 @@ final class AssetController extends AbstractController
     }
 
     #[Route('/new', name: 'app_asset_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_asset', 'app_asset_index');
+        if ($redirect) return $redirect;
         $asset = new Asset();
         $form = $this->createForm(AssetType::class, $asset);
         $form->handleRequest($request);
@@ -51,8 +54,10 @@ final class AssetController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_asset_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Asset $asset, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Asset $asset, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('edit_asset', 'app_asset_index');
+        if ($redirect) return $redirect;
         $form = $this->createForm(AssetType::class, $asset);
         $form->handleRequest($request);
 
@@ -69,8 +74,10 @@ final class AssetController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_asset_delete', methods: ['POST'])]
-    public function delete(Request $request, Asset $asset, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Asset $asset, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('delete_asset', 'app_asset_index');
+        if ($redirect) return $redirect;
         if ($this->isCsrfTokenValid('delete'.$asset->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($asset);
             $entityManager->flush();

@@ -1,0 +1,44 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Roles & Permissions · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Security</p>
+        <h1>Roles & Permissions</h1>
+        <p class="text-muted">Manage access control and role-based permissions.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_dashboard') }}">Back to dashboard</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="admin-section">
+        {% for role in roles %}
+            <div class="role-card">
+                <div class="role-header">
+                    <h3>{{ role.name }}</h3>
+                    <a class="btn primary small" href="{{ path('app_admin_roles_edit', {'role': role.name}) }}">Manage Permissions</a>
+                </div>
+                <div class="role-body">
+                    {% if role.permissions|length > 0 %}
+                        <p class="text-muted">{{ role.permissions|length }} permission(s) assigned</p>
+                        <ul class="permission-list">
+                            {% for permission in role.permissions %}
+                                <li class="permission-item">
+                                    <span class="permission-name">{{ permission.name }}</span>
+                                    <span class="permission-category">{{ permission.category }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No permissions assigned</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

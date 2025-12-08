@@ -51,6 +51,15 @@
                 </nav>
             </header>
         {% endblock %}
+        
+        {# Display flash messages #}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash-message flash-{{ type }} shell" style="margin-top: 1rem; padding: 1rem; border-radius: 0.5rem; {% if type == 'error' %}background: #7f1d1d; color: #fee2e2; border-left: 4px solid #dc2626;{% elseif type == 'success' %}background: #15803d; color: #dcfce7; border-left: 4px solid #22c55e;{% elseif type == 'warning' %}background: #7c2d12; color: #fed7aa; border-left: 4px solid #ea580c;{% else %}background: #1e40af; color: #dbeafe; border-left: 4px solid #3b82f6;{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
         <main class="{% block main_class %}shell{% endblock %}">
             {% block body %}{% endblock %}
         </main>

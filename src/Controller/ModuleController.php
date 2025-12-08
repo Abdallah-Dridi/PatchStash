@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Module;
 use App\Form\ModuleType;
 use App\Repository\ModuleRepository;
+use App\Service\PermissionChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +24,10 @@ final class ModuleController extends AbstractController
     }
 
     #[Route('/new', name: 'app_module_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('create_module', 'app_module_index');
+        if ($redirect) return $redirect;
         $module = new Module();
         $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
@@ -51,8 +54,10 @@ final class ModuleController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_module_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Module $module, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Module $module, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('edit_module', 'app_module_index');
+        if ($redirect) return $redirect;
         $form = $this->createForm(ModuleType::class, $module);
         $form->handleRequest($request);
 
@@ -69,8 +74,10 @@ final class ModuleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_module_delete', methods: ['POST'])]
-    public function delete(Request $request, Module $module, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Module $module, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
+        $redirect = $permissionChecker->requirePermissionOrRedirect('delete_module', 'app_module_index');
+        if ($redirect) return $redirect;
         if ($this->isCsrfTokenValid('delete'.$module->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($module);
             $entityManager->flush();
