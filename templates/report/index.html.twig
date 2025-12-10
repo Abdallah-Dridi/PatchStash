@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block body %}
+    <h1>Reports</h1>
+
+    <div style="margin-bottom: 2rem;">
+        {% if is_granted('create_report') %}
+            <a href="{{ path('app_admin_reports_new') }}" class="btn-soft primary">Create New Report</a>
+        {% endif %}
+    </div>
+
+    {% if reports is empty %}
+        <p>No reports generated yet.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Project</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>{{ report.title }}</td>
+                    <td>{{ report.generatedDate ? report.generatedDate|date('Y-m-d H:i') : '' }}</td>
+                    <td>{{ report.project ? report.project.name : 'N/A' }}</td>
+                    <td>
+                        <a href="#">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

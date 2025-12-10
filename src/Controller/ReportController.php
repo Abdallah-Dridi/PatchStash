@@ -41,4 +41,11 @@ final class ReportController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/reports', name: 'app_report_index', methods: ['GET'])]
+    public function index(ReportRepository $reportRepository): Response
+    {
+        return $this->render('report/index.html.twig', [
+            'reports' => $reportRepository->findAll(),
+        ]);
+    }
 }

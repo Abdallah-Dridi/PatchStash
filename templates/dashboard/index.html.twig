@@ -56,6 +56,13 @@
         }
         .card h3 { margin: 0 0 0.4rem; }
         .muted { color: #6b7280; font-size: 0.95rem; }
+        .card-link { text-decoration: none; color: inherit; display: block; }
+        .card-link:hover .card {
+            transform: translateY(-5px);
+            border-color: #a855f7;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+            transition: all 0.2s ease;
+        }
     </style>
 {% endblock %}
 
@@ -69,22 +76,30 @@
             <button class="btn-soft" disabled>Request feature</button>
         </div>
         <div class="grid">
-            <div class="card">
-                <h3>Projects</h3>
-                <p class="muted">Track ownership, modules, and rollout phases.</p>
-            </div>
-            <div class="card">
-                <h3>Assets</h3>
-                <p class="muted">Map servers, services, and environments to patch cycles.</p>
-            </div>
-            <div class="card">
-                <h3>Risk</h3>
-                <p class="muted">Surface highest CVEs and upcoming deadlines.</p>
-            </div>
-            <div class="card">
-                <h3>Reports</h3>
-                <p class="muted">Generate audit-ready summaries in one click.</p>
-            </div>
+            <a href="{{ path('app_project_index') }}" class="card-link">
+                <div class="card">
+                    <h3>Projects</h3>
+                    <p class="muted">Track ownership, modules, and rollout phases.</p>
+                </div>
+            </a>
+            <a href="{{ path('app_asset_index') }}" class="card-link">
+                <div class="card">
+                    <h3>Assets</h3>
+                    <p class="muted">Map servers, services, and environments to patch cycles.</p>
+                </div>
+            </a>
+            <a href="{{ path('app_vulnerability_index') }}" class="card-link">
+                <div class="card">
+                    <h3>Risk</h3>
+                    <p class="muted">Surface highest CVEs and upcoming deadlines.</p>
+                </div>
+            </a>
+            <a href="{{ path('app_report_index') }}" class="card-link">
+                <div class="card">
+                    <h3>Reports</h3>
+                    <p class="muted">Generate audit-ready summaries in one click.</p>
+                </div>
+            </a>
         </div>
     </div>
 {% endblock %}
