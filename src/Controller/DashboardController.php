@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use App\Enum\UserRole;
 use App\Repository\ProjectRepository;
+use App\Repository\ModuleRepository;
+use App\Repository\AssetRepository;
+use App\Repository\PatchCycleRepository;
+use App\Repository\VulnerabilityRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,7 +19,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class DashboardController extends AbstractController
 {
     #[Route('', name: 'app_dashboard', methods: ['GET'])]
-    public function __invoke(ProjectRepository $projectRepository): Response
+    public function __invoke(
+        ProjectRepository $projectRepository,
+        ModuleRepository $moduleRepository,
+        AssetRepository $assetRepository,
+        PatchCycleRepository $patchCycleRepository,
+        VulnerabilityRepository $vulnerabilityRepository,
+        UserRepository $userRepository
+    ): Response
     {
         $user = $this->getUser();
         $userRole = $user->getRole();
@@ -26,47 +38,77 @@ final class DashboardController extends AbstractController
 
         // Route to role-specific dashboard
         return match ($userRole) {
-            UserRole::ADMIN->value => $this->renderAdminDashboard($projectRepository),
-            UserRole::PROJECT_MANAGER->value => $this->renderProjectManagerDashboard($projectRepository),
-            UserRole::OPERATOR->value => $this->renderOperatorDashboard($projectRepository),
-            UserRole::AUDITOR->value => $this->renderAuditorDashboard($projectRepository),
+            UserRole::ADMIN->value => $this->renderAdminDashboard($projectRepository, $moduleRepository, $assetRepository, $patchCycleRepository, $vulnerabilityRepository, $userRepository),
+            UserRole::PROJECT_MANAGER->value => $this->renderProjectManagerDashboard($projectRepository, $moduleRepository, $assetRepository, $patchCycleRepository, $vulnerabilityRepository),
+            UserRole::OPERATOR->value => $this->renderOperatorDashboard($projectRepository, $moduleRepository, $assetRepository, $patchCycleRepository),
+            UserRole::AUDITOR->value => $this->renderAuditorDashboard($projectRepository, $moduleRepository, $assetRepository, $vulnerabilityRepository),
             default => $this->render('dashboard/no_role.html.twig'),
         };
     }
 
-    private function renderAdminDashboard(ProjectRepository $projectRepository): Response
+    private function renderAdminDashboard(
+        ProjectRepository $projectRepository,
+        ModuleRepository $moduleRepository,
+        AssetRepository $assetRepository,
+        PatchCycleRepository $patchCycleRepository,
+        VulnerabilityRepository $vulnerabilityRepository,
+        UserRepository $userRepository
+    ): Response
     {
         return $this->render('dashboard/admin.html.twig', [
+            'users' => $userRepository->findAll(),
             'projects' => $projectRepository->findAll(),
-            'totalProjects' => count($projectRepository->findAll()),
+            'modules' => $moduleRepository->findAll(),
+            'assets' => $assetRepository->findAll(),
+            'patchCycles' => $patchCycleRepository->findAll(),
+            'vulnerabilities' => $vulnerabilityRepository->findAll(),
         ]);
     }
 
-    private function renderProjectManagerDashboard(ProjectRepository $projectRepository): Response
+    private function renderProjectManagerDashboard(
+        ProjectRepository $projectRepository,
+        ModuleRepository $moduleRepository,
+        AssetRepository $assetRepository,
+        PatchCycleRepository $patchCycleRepository,
+        VulnerabilityRepository $vulnerabilityRepository
+    ): Response
     {
-        $user = $this->getUser();
-        // Project managers have access to all projects (they manage them)
         return $this->render('dashboard/project_manager.html.twig', [
             'projects' => $projectRepository->findAll(),
-            'totalProjects' => count($projectRepository->findAll()),
+            'modules' => $moduleRepository->findAll(),
+            'assets' => $assetRepository->findAll(),
+            'patchCycles' => $patchCycleRepository->findAll(),
+            'vulnerabilities' => $vulnerabilityRepository->findAll(),
         ]);
     }
 
-    private function renderOperatorDashboard(ProjectRepository $projectRepository): Response
+    private function renderOperatorDashboard(
+        ProjectRepository $projectRepository,
+        ModuleRepository $moduleRepository,
+        AssetRepository $assetRepository,
+        PatchCycleRepository $patchCycleRepository
+    ): Response
     {
-        $user = $this->getUser();
         return $this->render('dashboard/operator.html.twig', [
             'projects' => $projectRepository->findAll(),
-            'totalProjects' => count($projectRepository->findAll()),
+            'modules' => $moduleRepository->findAll(),
+            'assets' => $assetRepository->findAll(),
+            'patchCycles' => $patchCycleRepository->findAll(),
         ]);
     }
 
-    private function renderAuditorDashboard(ProjectRepository $projectRepository): Response
+    private function renderAuditorDashboard(
+        ProjectRepository $projectRepository,
+        ModuleRepository $moduleRepository,
+        AssetRepository $assetRepository,
+        VulnerabilityRepository $vulnerabilityRepository
+    ): Response
     {
-        $user = $this->getUser();
         return $this->render('dashboard/auditor.html.twig', [
             'projects' => $projectRepository->findAll(),
-            'totalProjects' => count($projectRepository->findAll()),
+            'modules' => $moduleRepository->findAll(),
+            'assets' => $assetRepository->findAll(),
+            'vulnerabilities' => $vulnerabilityRepository->findAll(),
         ]);
     }
 }
