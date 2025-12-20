@@ -1,0 +1,67 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modules · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
+        <h1>Modules</h1>
+        <p class="text-muted">Logical groupings of assets and patch cycles.</p>
+    </div>
+    <div class="actions">
+        <a class="btn primary" href="{{ path('app_admin_module_new') }}">New module</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All modules</h2>
+            <p class="text-muted">Project affiliation and status.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Assets</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for module in modules %}
+                {% set status = module.status|default('Pending') %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Deprecated': 'deprecated',
+                    'Failed': 'failed'
+                }[status]|default('pending') %}
+                <tr>
+                    <td>
+                        <strong>{{ module.name }}</strong>
+                    </td>
+                    <td class="text-muted">{{ module.project.name ?? 'N/A' }}</td>
+                    <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
+                    <td><span class="badge neutral">{{ module.assets|length }}</span></td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_admin_module_show', {'id': module.id}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_admin_module_edit', {'id': module.id}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted">No modules found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

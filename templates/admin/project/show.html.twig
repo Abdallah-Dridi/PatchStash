@@ -1,0 +1,67 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Project</p>
+        <h1>{{ project.name }}</h1>
+        <p class="text-muted">Status: <span class="badge">{{ project.status }}</span></p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_project_edit', {'id': project.id}) }}">Edit</a>
+        <a class="btn ghost" href="{{ path('app_admin_projects') }}">Back</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <h2>Details</h2>
+    <div class="details-grid">
+        <div>
+            <p class="label">Owner</p>
+            <p>{{ project.user.username ?? 'Unassigned' }}</p>
+        </div>
+        <div>
+            <p class="label">Status</p>
+            <p>{{ project.status }}</p>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <p class="label">Description</p>
+            <p>{{ project.description ?? 'No description' }}</p>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <p class="label">Additional Information</p>
+            <p>{{ project.info ?? 'No additional information' }}</p>
+        </div>
+    </div>
+</div>
+
+{% if project.assets is not empty %}
+<div class="admin-panel">
+    <h2>Assets ({{ project.assets|length }})</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in project.assets %}
+            <tr>
+                <td>{{ asset.name }}</td>
+                <td>{{ asset.type }}</td>
+                <td>{{ asset.createdAt|date('Y-m-d') }}</td>
+                <td class="actions-cell">
+                    <a href="{{ path('app_admin_asset_show', {'id': asset.id}) }}" class="link">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

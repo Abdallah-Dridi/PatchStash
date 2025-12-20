@@ -1,0 +1,44 @@
+{{ form_start(form, {'attr': {'class': 'admin-panel', 'novalidate': 'novalidate'}}) }}
+    <h2>Asset Details</h2>
+    <div class="form-grid">
+        <div>
+            {{ form_label(form.name, 'Asset Name') }}
+            {{ form_widget(form.name, {'attr': {'placeholder': 'Enter asset name'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <div>
+            {{ form_label(form.module, 'Parent Module') }}
+            {{ form_widget(form.module) }}
+            {{ form_errors(form.module) }}
+        </div>
+        <div>
+            {{ form_label(form.type, 'Type') }}
+            {{ form_widget(form.type) }}
+            {{ form_errors(form.type) }}
+        </div>
+        <div>
+            {{ form_label(form.environment, 'Environment') }}
+            {{ form_widget(form.environment) }}
+            {{ form_errors(form.environment) }}
+        </div>
+        <div>
+            {{ form_label(form.status, 'Status') }}
+            {{ form_widget(form.status) }}
+            {{ form_errors(form.status) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.description, 'Description') }}
+            {{ form_widget(form.description, {'attr': {'placeholder': 'Brief description...', 'rows': 3}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.info, 'Additional Information') }}
+            {{ form_widget(form.info, {'attr': {'placeholder': 'Technical details, notes...', 'rows': 3}}) }}
+            {{ form_errors(form.info) }}
+        </div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_admin_assets') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save Asset') }}</button>
+    </div>
+{{ form_end(form) }}

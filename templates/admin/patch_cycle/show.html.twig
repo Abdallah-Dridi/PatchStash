@@ -1,0 +1,55 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ patch_cycle.cycleId }}{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Patch Cycle</p>
+        <h1>{{ patch_cycle.cycleId }}</h1>
+        <p class="text-muted">Status: <span class="badge">{{ patch_cycle.status }}</span></p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_patch_cycle_edit', {'id': patch_cycle.id}) }}">Edit</a>
+        <a class="btn ghost" href="{{ path('app_admin_patch_cycles') }}">Back</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <h2>Details</h2>
+    <div class="details-grid">
+        <div>
+            <p class="label">Asset</p>
+            <p>{{ patch_cycle.asset.name ?? 'N/A' }}</p>
+        </div>
+        <div>
+            <p class="label">Status</p>
+            <p>{{ patch_cycle.status }}</p>
+        </div>
+        <div>
+            <p class="label">CVSS Score</p>
+            <p>{{ patch_cycle.cvss ?? 'N/A' }}</p>
+        </div>
+        <div>
+            <p class="label">Deadline</p>
+            <p>{{ patch_cycle.deadline|date('Y-m-d') ?? 'No deadline' }}</p>
+        </div>
+        <div>
+            <p class="label">Applied Date</p>
+            <p>{{ patch_cycle.appliedDate|date('Y-m-d') ?? 'Not applied' }}</p>
+        </div>
+        <div>
+            <p class="label">Created</p>
+            <p>{{ patch_cycle.createdAt|date('Y-m-d') }}</p>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <p class="label">Description</p>
+            <p>{{ patch_cycle.description ?? 'No description' }}</p>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <p class="label">Additional Information</p>
+            <p>{{ patch_cycle.info ?? 'No additional information' }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

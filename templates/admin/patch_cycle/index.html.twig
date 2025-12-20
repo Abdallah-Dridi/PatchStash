@@ -1,0 +1,69 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Patch Cycles · Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Directory</p>
+        <h1>Patch Cycles</h1>
+        <p class="text-muted">Track and manage security patches.</p>
+    </div>
+    <div class="actions">
+        <a class="btn primary" href="{{ path('app_admin_patch_cycle_new') }}">New patch cycle</a>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <header class="panel-header">
+        <div>
+            <h2>All patch cycles</h2>
+            <p class="text-muted">Assets, deadlines, and status.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cycle ID</th>
+                    <th>Asset</th>
+                    <th>CVSS</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for patch_cycle in patch_cycles %}
+                {% set status = patch_cycle.status|default('Pending') %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Applied': 'applied',
+                    'Failed': 'failed'
+                }[status]|default('pending') %}
+                <tr>
+                    <td>
+                        <strong>{{ patch_cycle.cycleId }}</strong>
+                    </td>
+                    <td class="text-muted">{{ patch_cycle.asset.name ?? 'N/A' }}</td>
+                    <td class="text-muted">{{ patch_cycle.cvss ?? '—' }}</td>
+                    <td class="text-muted">{{ patch_cycle.deadline|date('Y-m-d') ?? '—' }}</td>
+                    <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_admin_patch_cycle_show', {'id': patch_cycle.id}) }}">View</a>
+                            <a class="btn primary" href="{{ path('app_admin_patch_cycle_edit', {'id': patch_cycle.id}) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-muted">No patch cycles found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

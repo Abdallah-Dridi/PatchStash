@@ -1,0 +1,18 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}New Asset{% endblock %}
+
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Create</p>
+        <h1>New asset</h1>
+        <p class="text-muted">Add a new asset to a module.</p>
+    </div>
+    <div class="actions">
+        <a class="btn ghost" href="{{ path('app_admin_assets') }}">Back</a>
+    </div>
+</div>
+
+{{ include('admin/asset/_form.html.twig') }}
+{% endblock %}

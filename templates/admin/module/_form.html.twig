@@ -1,0 +1,34 @@
+{{ form_start(form, {'attr': {'class': 'admin-panel', 'novalidate': 'novalidate'}}) }}
+    <h2>Module Details</h2>
+    <div class="form-grid">
+        <div>
+            {{ form_label(form.name, 'Module Name') }}
+            {{ form_widget(form.name, {'attr': {'placeholder': 'Enter module name'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <div>
+            {{ form_label(form.status, 'Status') }}
+            {{ form_widget(form.status) }}
+            {{ form_errors(form.status) }}
+        </div>
+        <div>
+            {{ form_label(form.project, 'Parent Project') }}
+            {{ form_widget(form.project) }}
+            {{ form_errors(form.project) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.description, 'Description') }}
+            {{ form_widget(form.description, {'attr': {'placeholder': 'Brief description of this module...', 'rows': 3}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.info, 'Additional Information') }}
+            {{ form_widget(form.info, {'attr': {'placeholder': 'Technical details, notes, or references...', 'rows': 4}}) }}
+            {{ form_errors(form.info) }}
+        </div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_admin_modules') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save Module') }}</button>
+    </div>
+{{ form_end(form) }}

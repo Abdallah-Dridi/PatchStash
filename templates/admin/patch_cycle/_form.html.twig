@@ -1,0 +1,49 @@
+{{ form_start(form, {'attr': {'class': 'admin-panel', 'novalidate': 'novalidate'}}) }}
+    <h2>Patch Cycle Details</h2>
+    <div class="form-grid">
+        <div>
+            {{ form_label(form.cycleId, 'Cycle ID') }}
+            {{ form_widget(form.cycleId, {'attr': {'placeholder': 'e.g., PC-2024-001'}}) }}
+            {{ form_errors(form.cycleId) }}
+        </div>
+        <div>
+            {{ form_label(form.status, 'Status') }}
+            {{ form_widget(form.status) }}
+            {{ form_errors(form.status) }}
+        </div>
+        <div>
+            {{ form_label(form.asset, 'Asset') }}
+            {{ form_widget(form.asset) }}
+            {{ form_errors(form.asset) }}
+        </div>
+        <div>
+            {{ form_label(form.deadline, 'Deadline') }}
+            {{ form_widget(form.deadline) }}
+            {{ form_errors(form.deadline) }}
+        </div>
+        <div>
+            {{ form_label(form.appliedDate, 'Applied Date') }}
+            {{ form_widget(form.appliedDate) }}
+            {{ form_errors(form.appliedDate) }}
+        </div>
+        <div>
+            {{ form_label(form.cvss, 'CVSS Score') }}
+            {{ form_widget(form.cvss, {'attr': {'placeholder': '0.0 - 10.0'}}) }}
+            {{ form_errors(form.cvss) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.description, 'Description') }}
+            {{ form_widget(form.description, {'attr': {'placeholder': 'Brief description...', 'rows': 3}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.info, 'Additional Information') }}
+            {{ form_widget(form.info, {'attr': {'placeholder': 'Technical details, notes...', 'rows': 3}}) }}
+            {{ form_errors(form.info) }}
+        </div>
+    </div>
+    <div class="form-footer">
+        <a class="btn ghost" href="{{ path('app_admin_patch_cycles') }}">Cancel</a>
+        <button class="btn primary">{{ button_label|default('Save Patch Cycle') }}</button>
+    </div>
+{{ form_end(form) }}
