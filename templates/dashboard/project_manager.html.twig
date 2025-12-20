@@ -1,103 +1,123 @@
-{% extends 'base.html.twig' %}
+{% extends 'user/base.html.twig' %}
 
 {% block title %}Project Manager Dashboard · Patchstash{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .dashboard-hero {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-        .dashboard-header {
-            margin-bottom: 2.5rem;
-        }
-        .dashboard-header h1 {
-            margin: 0 0 0.4rem;
-            font-size: 2rem;
-            color: #111827;
-        }
-        .dashboard-header .subtitle {
-            color: #6b7280;
-            font-size: 0.95rem;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: #fff;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .stat-card .label {
-            font-size: 0.85rem;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.5rem;
-        }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #111827;
-        }
-        .section {
-            margin-bottom: 2.5rem;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
-        }
-        .section-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-            color: #111827;
-        }
-        .btn-group {
-            display: flex;
-            gap: 0.75rem;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
-        .card-link {
-            background: #fff;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-        .card-link:hover {
-            transform: translateY(-4px);
-            border-color: #3b82f6;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
-        }
-        .card-link h3 {
-            margin: 0 0 0.5rem;
-            color: #111827;
-        }
-        .card-link p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        .card-link .badge {
-            display: inline-block;
+{% block user_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Project Manager</h1>
+        <p class="text-muted">Manage projects, assets, and patch cycles.</p>
+    </div>
+    <div class="actions">
+        <a class="btn primary" href="{{ path('app_project_new') }}">New project</a>
+    </div>
+</div>
+
+<div class="admin-section" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem;">
+    <div class="admin-panel" style="padding: 1rem;">
+        <p class="label">Total Projects</p>
+        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 700; color: #f8fafc;">{{ projects|length }}</p>
+    </div>
+    <div class="admin-panel" style="padding: 1rem;">
+        <p class="label">Active Modules</p>
+        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 700; color: #f8fafc;">{{ modules|length }}</p>
+    </div>
+    <div class="admin-panel" style="padding: 1rem;">
+        <p class="label">Assets Under Management</p>
+        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 700; color: #f8fafc;">{{ assets|length }}</p>
+    </div>
+    <div class="admin-panel" style="padding: 1rem;">
+        <p class="label">Pending Patches</p>
+        <p style="margin: 0.5rem 0 0; font-size: 2rem; font-weight: 700; color: #f8fafc;">{{ patchCycles|length }}</p>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h2>Projects</h2>
+            <p class="text-muted">Your project portfolio</p>
+        </div>
+        <a class="btn primary" href="{{ path('app_project_index') }}">View all</a>
+    </div>
+    {% if projects %}
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Modules</th>
+                    <th>Assets</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for project in projects|slice(0, 5) %}
+                {% set statusClass = {
+                    'Active': 'active',
+                    'Pending': 'pending',
+                    'Deprecated': 'deprecated'
+                }[project.status]|default('pending') %}
+                <tr>
+                    <td><strong>{{ project.name }}</strong></td>
+                    <td><span class="badge {{ statusClass }}">{{ project.status }}</span></td>
+                    <td>{{ project.modules|length }}</td>
+                    <td>{{ project.assets|length }}</td>
+                    <td class="text-end">
+                        <a class="btn ghost" href="{{ path('app_project_show', {'id': project.id}) }}" style="font-size: 0.8rem;">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No projects yet. Create one to get started.</p>
+    {% endif %}
+</div>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h2>Recent Patch Cycles</h2>
+            <p class="text-muted">Latest patch management activities</p>
+        </div>
+        <a class="btn primary" href="{{ path('app_patch_cycle_index') }}">View all</a>
+    </div>
+    {% if patchCycles %}
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cycle ID</th>
+                    <th>Asset</th>
+                    <th>CVSS</th>
+                    <th>Deadline</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cycle in patchCycles|slice(0, 5) %}
+                <tr>
+                    <td><strong>{{ cycle.cycleId }}</strong></td>
+                    <td>{{ cycle.asset.name|default('N/A') }}</td>
+                    <td>{{ cycle.cvss|default('—') }}</td>
+                    <td>{{ cycle.deadline|date('M d, Y')|default('—') }}</td>
+                    <td class="text-end">
+                        <a class="btn ghost" href="{{ path('app_patch_cycle_show', {'id': cycle.id}) }}" style="font-size: 0.8rem;">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No patch cycles yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
             background: rgba(59, 130, 246, 0.1);
             color: #3b82f6;
             padding: 0.25rem 0.75rem;
