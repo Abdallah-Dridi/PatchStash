@@ -1,223 +1,101 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
 {% block title %}Operator Dashboard · Patchstash{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .dashboard-hero {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-        .dashboard-header {
-            margin-bottom: 2.5rem;
-        }
-        .dashboard-header h1 {
-            margin: 0 0 0.4rem;
-            font-size: 2rem;
-            color: #111827;
-        }
-        .dashboard-header .subtitle {
-            color: #6b7280;
-            font-size: 0.95rem;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
-            background: #fff;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .stat-card .label {
-            font-size: 0.85rem;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.5rem;
-        }
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #111827;
-        }
-        .section {
-            margin-bottom: 2.5rem;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
-        }
-        .section-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-            color: #111827;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
-        .card-link {
-            background: #fff;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-        .card-link:hover {
-            transform: translateY(-4px);
-            border-color: #f59e0b;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
-        }
-        .card-link h3 {
-            margin: 0 0 0.5rem;
-            color: #111827;
-        }
-        .card-link p {
-            margin: 0;
-            color: #6b7280;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        .card-link .badge {
-            display: inline-block;
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 0.75rem;
-        }
-        .empty-state {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-            color: #6b7280;
-        }
-    </style>
-{% endblock %}
+{% block admin_content %}
+<div class="page-head">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Operator</h1>
+        <p class="text-muted">Manage patches, vulnerabilities, and assets.</p>
+    </div>
+</div>
 
-{% block body %}
-    <div class="dashboard-hero">
-        <div class="dashboard-header">
-            <h1>👋 Welcome, {{ app.user.username }}</h1>
-            <p class="subtitle">Operator Dashboard · Manage patches and vulnerabilities</p>
+<div class="admin-section" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem;">
+    <div class="stat-card">
+        <div class="stat-meta">
+            <p class="stat-label">Accessible Projects</p>
+            <p class="stat-value">{{ totalProjects }}</p>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">Accessible Projects</div>
-                <div class="value">{{ totalProjects }}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Role</div>
-                <div class="value" style="font-size: 1.2rem; color: #f59e0b;">Operator</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Focus</div>
-                <div class="value" style="font-size: 1rem; color: #dc2626;">Patch Ops</div>
-            </div>
+        <div class="stat-icon">📁</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-meta">
+            <p class="stat-label">Role</p>
+            <p class="stat-value" style="font-size: 1.5rem;">Operator</p>
         </div>
+        <div class="stat-pill">Patch Ops</div>
+    </div>
+</div>
 
-        <div class="section">
-            <div class="section-header">
-                <h2>Available Projects</h2>
-            </div>
-            
-            {% if projects|length > 0 %}
-                <div class="card-grid">
-                    {% for project in projects %}
-                        <a href="{{ path('app_project_show', {'id': project.id}) }}" class="card-link">
-                            <h3>📁 {{ project.name }}</h3>
-                            <p>{{ project.description|slice(0, 100) }}{% if project.description|length > 100 %}...{% endif %}</p>
-                            <span class="badge">{{ project.modules|length }} modules</span>
-                        </a>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <p>You don't have access to any projects yet. Contact your Project Manager.</p>
-                </div>
-            {% endif %}
+<div class="admin-panel">
+    <div class="panel-header">
+        <div>
+            <h2>Available Projects</h2>
+            <p class="text-muted">Projects requiring operational support</p>
         </div>
+        {% if projects|length > 0 %}
+             <a class="btn primary" href="{{ path('app_project_index') }}">View all</a>
+        {% endif %}
+    </div>
+    
+    {% if projects|length > 0 %}
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Description</th>
+                    <th>Modules</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects|slice(0, 5) %}
+                <tr>
+                    <td><strong>{{ project.name }}</strong></td>
+                    <td class="text-muted">{{ project.description|striptags|slice(0, 60) }}...</td>
+                    <td><span class="badge low">{{ project.modules|length }} Modules</span></td>
+                    <td class="text-end">
+                        <a class="btn ghost small" href="{{ path('app_project_show', {'id': project.id}) }}">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="padding: 3rem; text-align: center;">
+        <p class="text-muted">You don't have access to any projects yet.</p>
+    </div>
+    {% endif %}
+</div>
 
-        <div class="section">
-            <div class="section-header">
-                <h2>Operational Tools</h2>
-            </div>
-            
-            <div class="card-grid">
-                <a href="{{ path('app_patch_cycle_index') }}" class="card-link">
-                    <h3>⚙️ Patch Cycles</h3>
-                    <p>Manage patch windows, scans, and deployment states for vulnerabilities.</p>
-                    <span class="badge">Primary Responsibility</span>
-                </a>
-                <a href="{{ path('app_vulnerability_index') }}" class="card-link">
-                    <h3>⚠️ Vulnerabilities</h3>
-                    <p>View and manage CVEs discovered via scanning tools or manual entry.</p>
-                    <span class="badge">Risk Management</span>
-                </a>
-                <a href="{{ path('app_asset_index') }}" class="card-link">
-                    <h3>🖥️ Assets</h3>
-                    <p>View systems and components assigned to you for patch management.</p>
-                    <span class="badge">Inventory</span>
-                </a>
-                <a href="{{ path('app_module_index') }}" class="card-link">
-                    <h3>📦 Modules</h3>
-                    <p>Browse service areas and their assets requiring patch updates.</p>
-                    <span class="badge">Organization</span>
-                </a>
-            </div>
+<div class="admin-section" style="margin-top: 2rem;">
+    <div class="admin-panel">
+        <div class="panel-header">
+            <h2>Operational Tools</h2>
         </div>
-
-        <div class="section">
-            <div class="section-header">
-                <h2>Your Responsibilities</h2>
-            </div>
-            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1.5rem; border-radius: 8px; color: #92400e;">
-                <ul style="margin: 0; padding-left: 1.5rem;">
-                    <li>Manage patch cycles and deployment schedules</li>
-                    <li>Execute vulnerability scans or record manual findings</li>
-                    <li>Track patch deployment status across assets</li>
-                    <li>Update vulnerability information and fix status</li>
-                    <li>Report operational progress to Project Managers</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">
-                <h2>Quick Tips</h2>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 1rem; border-radius: 8px; color: #166534;">
-                    <strong>💡 Automated Discovery</strong>
-                    <p style="margin: 0.5rem 0 0;">Use your scanning tools to automatically detect vulnerabilities.</p>
-                </div>
-                <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 1rem; border-radius: 8px; color: #166534;">
-                    <strong>📝 Manual Entry</strong>
-                    <p style="margin: 0.5rem 0 0;">Add vulnerabilities manually when discovered outside scanning.</p>
-                </div>
-                <div style="background: #f0fdf4; border: 1px solid #86efac; padding: 1rem; border-radius: 8px; color: #166534;">
-                    <strong>✅ Track Progress</strong>
-                    <p style="margin: 0.5rem 0 0;">Update patch cycle status as deployments progress.</p>
-                </div>
-            </div>
+        <div class="quick-actions">
+            <a href="{{ path('app_patch_cycle_index') }}" class="action-card" style="text-decoration: none;">
+                <h3 style="margin:0; color:#f8fafc; font-size:1rem;">⚙️ Patch Cycles</h3>
+                <p class="text-muted" style="font-size:0.85rem; margin:0;">Manage patch windows and deployments</p>
+                <span class="badge medium" style="width: fit-content; margin-top:0.5rem;">Primary</span>
+            </a>
+            <a href="{{ path('app_vulnerability_index') }}" class="action-card" style="text-decoration: none;">
+                <h3 style="margin:0; color:#f8fafc; font-size:1rem;">⚠️ Vulnerabilities</h3>
+                <p class="text-muted" style="font-size:0.85rem; margin:0;">Track and remediate security risks</p>
+                <span class="badge critical" style="width: fit-content; margin-top:0.5rem;">High Priority</span>
+            </a>
+            <a href="{{ path('app_asset_index') }}" class="action-card" style="text-decoration: none;">
+                <h3 style="margin:0; color:#f8fafc; font-size:1rem;">🖥️ Assets</h3>
+                <p class="text-muted" style="font-size:0.85rem; margin:0;">Inventory of systems and components</p>
+            </a>
+            <a href="{{ path('app_module_index') }}" class="action-card" style="text-decoration: none;">
+                <h3 style="margin:0; color:#f8fafc; font-size:1rem;">📦 Modules</h3>
+                <p class="text-muted" style="font-size:0.85rem; margin:0;">Service areas requiring updates</p>
+            </a>
         </div>
     </div>
+</div>
 {% endblock %}

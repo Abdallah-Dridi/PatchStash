@@ -140,6 +140,23 @@ class Project
         return $this;
     }
 
+    /**
+     * Helper to get all assets across all modules in this project
+     * @return Collection<int, Asset>
+     */
+    public function getAssets(): Collection
+    {
+        $assets = new ArrayCollection();
+        foreach ($this->modules as $module) {
+            foreach ($module->getAssets() as $asset) {
+                if (!$assets->contains($asset)) {
+                    $assets->add($asset);
+                }
+            }
+        }
+        return $assets;
+    }
+
     /** @return Collection<int, Report> */
     public function getReports(): Collection 
     { 

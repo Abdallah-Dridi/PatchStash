@@ -90,6 +90,7 @@ final class DashboardController extends AbstractController
     ): Response
     {
         return $this->render('dashboard/operator.html.twig', [
+            'totalProjects' => $projectRepository->count([]),
             'projects' => $projectRepository->findAll(),
             'modules' => $moduleRepository->findAll(),
             'assets' => $assetRepository->findAll(),
@@ -105,6 +106,7 @@ final class DashboardController extends AbstractController
     ): Response
     {
         return $this->render('dashboard/auditor.html.twig', [
+            'totalProjects' => $projectRepository->count([]),
             'projects' => $projectRepository->findAll(),
             'modules' => $moduleRepository->findAll(),
             'assets' => $assetRepository->findAll(),
