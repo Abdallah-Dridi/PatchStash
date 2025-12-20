@@ -1,0 +1,292 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body.user-shell-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header.shell {
+            flex-shrink: 0;
+        }
+
+        .user-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem 1.5rem;
+        }
+
+        .page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .page-head > div:first-child h1 {
+            margin: 0.5rem 0 0;
+            font-size: 1.8rem;
+            color: #111827;
+        }
+
+        .page-head .eyebrow {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .page-head .text-muted {
+            color: #6b7280;
+            margin: 0.5rem 0 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: #fff;
+            color: #111827;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            border-color: rgba(148, 163, 184, 0.5);
+            background: #f9fafb;
+        }
+
+        .btn.primary {
+            background: linear-gradient(120deg, #a855f7, #38bdf8);
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+        }
+
+        .btn.ghost:hover {
+            color: #111827;
+            background: rgba(107, 114, 128, 0.1);
+        }
+
+        .form-card {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-card h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background: #f9fafb;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.deprecated {
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        .badge.failed {
+            background: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #a855f7;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .card h3 {
+            margin: 0 0 0.5rem;
+            color: #111827;
+        }
+
+        .card p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-head {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .user-content {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body_class %}user-shell-wrapper{% endblock %}
+
+{% block body %}
+<div class="user-main">
+    {% block header %}
+        <header class="shell">
+            <nav class="topnav">
+                <a href="{{ path('app_dashboard') }}" class="brand">Patchstash</a>
+                <div class="nav-links">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_dashboard') }}">Admin</a>
+                    {% endif %}
+                    {% if app.user %}
+                        <span class="muted">Hi {{ app.user.username }}</span>
+                        <a href="{{ path('app_logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Login</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </header>
+    {% endblock %}
+
+    {# Display flash messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-message flash-{{ type }} shell" style="margin-top: 1rem; padding: 1rem; border-radius: 0.5rem; {% if type == 'error' %}background: #7f1d1d; color: #fee2e2; border-left: 4px solid #dc2626;{% elseif type == 'success' %}background: #15803d; color: #dcfce7; border-left: 4px solid #22c55e;{% elseif type == 'warning' %}background: #7c2d12; color: #fed7aa; border-left: 4px solid #ea580c;{% else %}background: #1e40af; color: #dbeafe; border-left: 4px solid #3b82f6;{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="user-content">
+        {% block user_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

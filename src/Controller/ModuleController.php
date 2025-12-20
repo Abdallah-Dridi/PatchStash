@@ -11,8 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/module')]
+#[IsGranted('ROLE_USER')]
 final class ModuleController extends AbstractController
 {
     #[Route(name: 'app_module_index', methods: ['GET'])]
