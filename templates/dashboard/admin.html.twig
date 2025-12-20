@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard · Patchstash{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .dashboard-hero {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .dashboard-header {
+            margin-bottom: 2.5rem;
+        }
+        .dashboard-header h1 {
+            margin: 0 0 0.4rem;
+            font-size: 2rem;
+            color: #111827;
+        }
+        .dashboard-header .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #111827;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .admin-card {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+        .admin-card:hover {
+            transform: translateY(-4px);
+            border-color: #a855f7;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+        }
+        .admin-card h3 {
+            margin: 0 0 0.5rem;
+            color: #111827;
+        }
+        .admin-card p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .admin-card .badge {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="dashboard-hero">
+        <div class="dashboard-header">
+            <h1>👋 Welcome, {{ app.user.username }}</h1>
+            <p class="subtitle">Admin Dashboard · Full system overview and management</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Projects</div>
+                <div class="value">{{ totalProjects }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">System Status</div>
+                <div class="value" style="color: #16a34a;">Active</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Role</div>
+                <div class="value" style="font-size: 1.2rem; color: #a855f7;">Admin</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Management Console</h2>
+                <div class="btn-group">
+                    <a href="{{ path('app_admin_users') }}" class="btn primary">Manage Users</a>
+                    <a href="{{ path('app_admin_dashboard') }}" class="btn ghost">Admin Panel</a>
+                </div>
+            </div>
+            
+            <div class="card-grid">
+                <a href="{{ path('app_project_index') }}" class="admin-card">
+                    <h3>📁 Projects</h3>
+                    <p>Create and manage all projects. Assign roles and permissions to team members.</p>
+                    <span class="badge">{{ totalProjects }} total</span>
+                </a>
+                <a href="{{ path('app_admin_users') }}" class="admin-card">
+                    <h3>👥 Users & Roles</h3>
+                    <p>Manage user accounts, assign roles, and configure permissions across all roles.</p>
+                    <span class="badge">Admin Only</span>
+                </a>
+                <a href="{{ path('app_module_index') }}" class="admin-card">
+                    <h3>📦 Modules</h3>
+                    <p>View and organize service areas within projects.</p>
+                    <span class="badge">Directory</span>
+                </a>
+                <a href="{{ path('app_asset_index') }}" class="admin-card">
+                    <h3>🖥️ Assets</h3>
+                    <p>Inventory of systems and components under management.</p>
+                    <span class="badge">Inventory</span>
+                </a>
+                <a href="{{ path('app_patch_cycle_index') }}" class="admin-card">
+                    <h3>⚙️ Patch Cycles</h3>
+                    <p>Track patch windows, priority, and rollout states.</p>
+                    <span class="badge">Operations</span>
+                </a>
+                <a href="{{ path('app_vulnerability_index') }}" class="admin-card">
+                    <h3>⚠️ Vulnerabilities</h3>
+                    <p>Monitor tracked findings with severity and CVSS scoring.</p>
+                    <span class="badge">Risk</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <div style="background: #f9fafb; border-radius: 12px; padding: 2rem; text-align: center; color: #6b7280;">
+                <p>Activity tracking coming soon. Check back for recent project updates and user actions.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

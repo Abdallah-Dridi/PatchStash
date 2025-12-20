@@ -1,0 +1,243 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Auditor Dashboard · Patchstash{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .dashboard-hero {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .dashboard-header {
+            margin-bottom: 2.5rem;
+        }
+        .dashboard-header h1 {
+            margin: 0 0 0.4rem;
+            font-size: 2rem;
+            color: #111827;
+        }
+        .dashboard-header .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #111827;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .card-link {
+            background: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+        .card-link:hover {
+            transform: translateY(-4px);
+            border-color: #8b5cf6;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+        }
+        .card-link h3 {
+            margin: 0 0 0.5rem;
+            color: #111827;
+        }
+        .card-link p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .card-link .badge {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+        .empty-state {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="dashboard-hero">
+        <div class="dashboard-header">
+            <h1>👋 Welcome, {{ app.user.username }}</h1>
+            <p class="subtitle">Auditor Dashboard · Review security posture and generate compliance reports</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Auditable Projects</div>
+                <div class="value">{{ totalProjects }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Role</div>
+                <div class="value" style="font-size: 1.2rem; color: #8b5cf6;">Auditor</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Focus</div>
+                <div class="value" style="font-size: 1rem; color: #7c3aed;">Compliance</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Projects Under Audit</h2>
+            </div>
+            
+            {% if projects|length > 0 %}
+                <div class="card-grid">
+                    {% for project in projects %}
+                        <a href="{{ path('app_project_show', {'id': project.id}) }}" class="card-link">
+                            <h3>📁 {{ project.name }}</h3>
+                            <p>{{ project.description|slice(0, 100) }}{% if project.description|length > 100 %}...{% endif %}</p>
+                            <span class="badge">{{ project.modules|length }} modules</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>You don't have access to any projects yet. Contact your administrator.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Audit & Compliance Tools</h2>
+            </div>
+            
+            <div class="card-grid">
+                <a href="{{ path('app_report_index') }}" class="card-link">
+                    <h3>📊 Reports</h3>
+                    <p>Generate and review audit-ready compliance and security reports.</p>
+                    <span class="badge">Primary Tool</span>
+                </a>
+                <a href="{{ path('app_vulnerability_index') }}" class="card-link">
+                    <h3>⚠️ Vulnerabilities</h3>
+                    <p>Review findings, severity levels, and remediation status.</p>
+                    <span class="badge">Risk Assessment</span>
+                </a>
+                <a href="{{ path('app_patch_cycle_index') }}" class="card-link">
+                    <h3>⚙️ Patch Cycles</h3>
+                    <p>Audit patch deployment progress and security coverage.</p>
+                    <span class="badge">Verification</span>
+                </a>
+                <a href="{{ path('app_project_index') }}" class="card-link">
+                    <h3>📁 Projects</h3>
+                    <p>Review project security status and audit trails.</p>
+                    <span class="badge">Overview</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Key Responsibilities</h2>
+            </div>
+            <div style="background: #f5f3ff; border-left: 4px solid #8b5cf6; padding: 1.5rem; border-radius: 8px; color: #5b21b6;">
+                <ul style="margin: 0; padding-left: 1.5rem;">
+                    <li>Audit project security posture and compliance status</li>
+                    <li>Review patched vulnerabilities and remediation records</li>
+                    <li>Generate compliance reports for regulatory requirements</li>
+                    <li>Document security actions and audit findings</li>
+                    <li>Verify patch deployment completion and effectiveness</li>
+                    <li>Create audit trails for regulatory documentation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Audit Workflow</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; border-radius: 8px;">
+                    <strong>1️⃣ Review Projects</strong>
+                    <p style="margin: 0.5rem 0 0; color: #6b7280;">Start by examining projects in your audit scope.</p>
+                </div>
+                <div style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; border-radius: 8px;">
+                    <strong>2️⃣ Assess Status</strong>
+                    <p style="margin: 0.5rem 0 0; color: #6b7280;">Check vulnerability status and patch coverage.</p>
+                </div>
+                <div style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; border-radius: 8px;">
+                    <strong>3️⃣ Generate Reports</strong>
+                    <p style="margin: 0.5rem 0 0; color: #6b7280;">Create audit-ready compliance and security reports.</p>
+                </div>
+                <div style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; border-radius: 8px;">
+                    <strong>4️⃣ Document Findings</strong>
+                    <p style="margin: 0.5rem 0 0; color: #6b7280;">Record audit results and regulatory compliance status.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Compliance Standards</h2>
+            </div>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 1.5rem; border-radius: 8px;">
+                <p style="color: #6b7280; margin: 0;">Reports can be generated to support compliance with common standards such as:</p>
+                <ul style="margin: 0.75rem 0 0; padding-left: 1.5rem; color: #6b7280;">
+                    <li>Industry regulations and audit requirements</li>
+                    <li>Security patching policies and standards</li>
+                    <li>Vulnerability management frameworks</li>
+                    <li>Internal security policies and procedures</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
