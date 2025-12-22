@@ -37,6 +37,9 @@ class PatchCycle
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $info = null;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
     /** @var Collection<int, Vulnerability> */
     #[ORM\OneToMany(
         mappedBy: 'patchCycle',
@@ -53,6 +56,7 @@ class PatchCycle
     public function __construct()
     {
         $this->vulnerabilities = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     // ------------------- Getters / Setters -------------------
@@ -178,6 +182,9 @@ class PatchCycle
         $this->asset = $asset; 
         return $this; 
     }
+
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
     public function __toString(): string 
     { 

@@ -27,6 +27,9 @@ class Project
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $info = null;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'projects')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?User $user = null;
@@ -53,6 +56,7 @@ class Project
     {
         $this->modules = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     // ------------------- Getters / Setters -------------------
@@ -179,6 +183,9 @@ class Project
         }
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
     public function __toString(): string 
     { 

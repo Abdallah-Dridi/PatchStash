@@ -44,4 +44,7 @@ docker-compose.override.yaml
 /upload/
 /storage/
 *.log
+SUMMARY_OF_CHANGES.md
+AUTOMATION_OVERVIEW.md
+PROJECT_OVERVIEW.md
 ###< Local Configuration ###

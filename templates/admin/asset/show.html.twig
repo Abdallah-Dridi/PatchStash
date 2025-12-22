@@ -10,6 +10,9 @@
         <p class="text-muted">Type: <span class="badge">{{ asset.type }}</span></p>
     </div>
     <div class="actions">
+        <form action="{{ path('app_admin_asset_scan_single', {'id': asset.id}) }}" method="POST" style="display: inline;">
+            <button type="submit" class="btn secondary">Scan for Vulnerabilities</button>
+        </form>
         <a class="btn ghost" href="{{ path('app_admin_asset_edit', {'id': asset.id}) }}">Edit</a>
         <a class="btn ghost" href="{{ path('app_admin_assets') }}">Back</a>
     </div>
@@ -34,6 +37,14 @@
             <p class="label">Status</p>
             <p>{{ asset.status }}</p>
         </div>
+        <div>
+            <p class="label">Software Component</p>
+            <p><code>{{ asset.softwareName ?? 'Not set' }}</code></p>
+        </div>
+        <div>
+            <p class="label">Software Version</p>
+            <p><span class="badge neutral">{{ asset.softwareVersion ?? 'Not set' }}</span></p>
+        </div>
         <div style="grid-column: 1 / -1;">
             <p class="label">Description</p>
             <p>{{ asset.description ?? 'No description' }}</p>
@@ -42,6 +53,50 @@
             <p class="label">Additional Information</p>
             <p>{{ asset.info ?? 'No additional information' }}</p>
         </div>
+    </div>
+</div>
+
+<div class="admin-panel mt-4">
+    <header class="panel-header">
+        <div>
+            <h2>Detected Vulnerabilities</h2>
+            <p class="text-muted">Security flaws found on this asset.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>CVE ID</th>
+                    <th>Name</th>
+                    <th>CVSS</th>
+                    <th>Severity</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for vulnerability in asset.vulnerabilities %}
+                <tr>
+                    <td><strong>{{ vulnerability.cveId }}</strong></td>
+                    <td class="text-muted text-sm">{{ vulnerability.name }}</td>
+                    <td>{{ vulnerability.cvss }}</td>
+                    <td>
+                        {% set sev = vulnerability.severity|lower %}
+                        <span class="badge {% if sev == 'critical' %}failed{% elseif sev == 'high' %}active{% elseif sev == 'medium' %}pending{% else %}neutral{% endif %}">
+                            {{ vulnerability.severity }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a class="btn ghost btn-sm" href="{{ path('app_admin_vulnerability_show', {'id': vulnerability.id}) }}">View</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted">No vulnerabilities detected for this asset. Run a scan to find them.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

@@ -10,6 +10,9 @@
         <p class="text-muted">Systems and components under management.</p>
     </div>
     <div class="actions">
+        <form action="{{ path('app_admin_asset_scan') }}" method="POST" style="display: inline;">
+            <button type="submit" class="btn secondary">Scan All Assets</button>
+        </form>
         <a class="btn primary" href="{{ path('app_asset_new') }}">New asset</a>
     </div>
 </div>
@@ -26,10 +29,10 @@
             <thead>
                 <tr>
                     <th>Asset</th>
+                    <th>Software</th>
                     <th>Module</th>
-                    <th>Environment</th>
+                    <th>Env</th>
                     <th>Status</th>
-                    <th>Type</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -43,11 +46,21 @@
                     'Failed': 'failed'
                 }[status]|default('pending') %}
                 <tr>
-                    <td><strong>{{ asset.name }}</strong></td>
+                    <td>
+                        <strong>{{ asset.name }}</strong>
+                        <div class="text-xs text-muted">{{ asset.type }}</div>
+                    </td>
+                    <td>
+                        {% if asset.softwareName %}
+                            <code class="text-xs">{{ asset.softwareName }}</code>
+                            <span class="badge neutral text-xs">{{ asset.softwareVersion }}</span>
+                        {% else %}
+                            <span class="text-muted text-xs">—</span>
+                        {% endif %}
+                    </td>
                     <td class="text-muted">{{ asset.module ? asset.module.name : 'Unassigned' }}</td>
                     <td><span class="badge neutral">{{ asset.environment }}</span></td>
                     <td><span class="badge {{ statusClass }}">{{ status }}</span></td>
-                    <td><span class="badge neutral">{{ asset.type }}</span></td>
                     <td class="text-end">
                         <div class="table-actions">
                             <a class="btn ghost" href="{{ path('app_asset_show', {'id': asset.id}) }}">View</a>

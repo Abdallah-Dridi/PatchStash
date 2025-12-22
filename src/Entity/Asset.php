@@ -18,17 +18,26 @@ class Asset
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'text')]
-    private string $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
 
-    #[ORM\Column(length: 100)]
-    private string $type;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $type = null;
 
-    #[ORM\Column(length: 100)]
-    private string $environment;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $environment = null;
 
-    #[ORM\Column(length: 100)]
-    private string $status;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $status = 'Pending';
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $softwareName = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $softwareVersion = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $info = null;
@@ -46,9 +55,20 @@ class Asset
     )]
     private Collection $patchCycles;
 
+    /** @var Collection<int, Vulnerability> */
+    #[ORM\OneToMany(
+        mappedBy: 'asset',
+        targetEntity: Vulnerability::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $vulnerabilities;
+
     public function __construct()
     {
         $this->patchCycles = new ArrayCollection();
+        $this->vulnerabilities = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     // ------------------- Getters / Setters -------------------
@@ -58,17 +78,23 @@ class Asset
     public function getName(): string { return $this->name; }
     public function setName(string $name): self { $this->name = $name; return $this; }
 
-    public function getDescription(): string { return $this->description; }
-    public function setDescription(string $description): self { $this->description = $description; return $this; }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): self { $this->description = $description; return $this; }
 
-    public function getType(): string { return $this->type; }
-    public function setType(string $type): self { $this->type = $type; return $this; }
+    public function getType(): ?string { return $this->type; }
+    public function setType(?string $type): self { $this->type = $type; return $this; }
 
-    public function getEnvironment(): string { return $this->environment; }
-    public function setEnvironment(string $environment): self { $this->environment = $environment; return $this; }
+    public function getEnvironment(): ?string { return $this->environment; }
+    public function setEnvironment(?string $environment): self { $this->environment = $environment; return $this; }
 
-    public function getStatus(): string { return $this->status; }
-    public function setStatus(string $status): self { $this->status = $status; return $this; }
+    public function getStatus(): ?string { return $this->status; }
+    public function setStatus(?string $status): self { $this->status = $status; return $this; }
+
+    public function getSoftwareName(): ?string { return $this->softwareName; }
+    public function setSoftwareName(?string $softwareName): self { $this->softwareName = $softwareName; return $this; }
+
+    public function getSoftwareVersion(): ?string { return $this->softwareVersion; }
+    public function setSoftwareVersion(?string $softwareVersion): self { $this->softwareVersion = $softwareVersion; return $this; }
 
     public function getInfo(): ?string { return $this->info; }
     public function setInfo(?string $info): self { $this->info = $info; return $this; }
@@ -95,6 +121,29 @@ class Asset
         }
         return $this;
     }
+
+    /** @return Collection<int, Vulnerability> */
+    public function getVulnerabilities(): Collection { return $this->vulnerabilities; }
+
+    public function addVulnerability(Vulnerability $vulnerability): self
+    {
+        if (!$this->vulnerabilities->contains($vulnerability)) {
+            $this->vulnerabilities->add($vulnerability);
+            $vulnerability->setAsset($this);
+        }
+        return $this;
+    }
+
+    public function removeVulnerability(Vulnerability $vulnerability): self
+    {
+        if ($this->vulnerabilities->removeElement($vulnerability) && $vulnerability->getAsset() === $this) {
+            $vulnerability->setAsset(null);
+        }
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
 
     public function __toString(): string { return $this->name; }
 }

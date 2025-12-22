@@ -19,6 +19,14 @@ class AssetType extends AbstractType
             ->add('type')
             ->add('environment')
             ->add('status')
+            ->add('softwareName', null, [
+                'label' => 'Software Component (e.g. apache)',
+                'required' => false,
+            ])
+            ->add('softwareVersion', null, [
+                'label' => 'Software Version (e.g. 2.4.49)',
+                'required' => false,
+            ])
             ->add('info')
             ->add('module', EntityType::class, [
                 'class' => Module::class,
