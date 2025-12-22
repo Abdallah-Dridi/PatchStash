@@ -32,11 +32,11 @@
         </div>
         <div>
             <p class="label">Deadline</p>
-            <p>{{ patch_cycle.deadline|date('Y-m-d') ?? 'No deadline' }}</p>
+            <p>{{ patch_cycle.deadline ? patch_cycle.deadline|date('Y-m-d') : 'No deadline' }}</p>
         </div>
         <div>
             <p class="label">Applied Date</p>
-            <p>{{ patch_cycle.appliedDate|date('Y-m-d') ?? 'Not applied' }}</p>
+            <p>{{ patch_cycle.appliedDate ? patch_cycle.appliedDate|date('Y-m-d') : 'Not applied' }}</p>
         </div>
         <div>
             <p class="label">Created</p>
