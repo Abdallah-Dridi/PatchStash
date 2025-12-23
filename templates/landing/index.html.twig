@@ -6,22 +6,32 @@
     {{ parent() }}
     <style>
         :root {
-            --primary: #a855f7;
-            --secondary: #38bdf8;
-            --dark: #0f172a;
-            --light: #f8fafc;
+            --bg: #070c1a;
+            --accent: #a855f7;
+            --accent-2: #38bdf8;
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border: rgba(88, 28, 135, 0.35);
         }
 
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        body.layout {
+            background: radial-gradient(circle at 20% 20%, rgba(168, 85, 247, 0.25), transparent 35%), radial-gradient(circle at 80% 10%, rgba(56, 189, 248, 0.2), transparent 40%), var(--bg) !important;
+        }
+
+        .landing-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .landing-hero {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(56, 189, 248, 0.08));
+            flex: 1;
             padding: 6rem 2rem;
             text-align: center;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
         }
 
         .hero-content {
@@ -33,29 +43,31 @@
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            padding: 0.45rem 0.9rem;
+            padding: 0.5rem 1rem;
             border-radius: 999px;
-            background: rgba(56, 189, 248, 0.12);
-            color: #0ea5e9;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-2);
             font-weight: 600;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
         }
 
         .hero-content h1 {
             font-size: 3.5rem;
             font-weight: 800;
             margin: 0 0 1rem;
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1.1;
+            color: var(--text);
         }
 
         .hero-content p {
             font-size: 1.2rem;
-            color: #6b7280;
+            color: var(--text-muted);
             margin: 0 0 2rem;
             max-width: 600px;
             margin-left: auto;
@@ -82,30 +94,32 @@
         }
 
         .btn-primary {
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
+            background: linear-gradient(120deg, var(--accent), var(--accent-2));
             color: white;
-            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.25);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+            border: 1px solid var(--border);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.35);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.4);
         }
 
         .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--accent-2);
+            border: 2px solid var(--accent-2);
         }
 
         .btn-secondary:hover {
-            background: #f8fafc;
+            background: rgba(56, 189, 248, 0.1);
             transform: translateY(-2px);
         }
 
         .features-section {
             padding: 6rem 2rem;
-            background: white;
+            background: rgba(10, 16, 32, 0.5);
+            border-bottom: 1px solid var(--border);
         }
 
         .features-container {
@@ -122,11 +136,11 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin: 0 0 1rem;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .section-header p {
-            color: #6b7280;
+            color: var(--text-muted);
             font-size: 1.1rem;
             margin: 0;
         }
@@ -141,15 +155,16 @@
         .feature-card {
             padding: 2rem;
             border-radius: 14px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            background: #f8fafc;
+            border: 1px solid var(--border);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.6), rgba(17, 24, 39, 0.5));
             transition: all 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.15);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.8), rgba(17, 24, 39, 0.7));
         }
 
         .feature-icon {
@@ -161,11 +176,11 @@
             font-size: 1.3rem;
             font-weight: 700;
             margin: 0 0 0.7rem;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .feature-card p {
-            color: #6b7280;
+            color: var(--text-muted);
             margin: 0;
             line-height: 1.6;
         }
@@ -182,7 +197,7 @@
         }
 
         .benefit-check {
-            color: var(--secondary);
+            color: var(--accent-2);
             font-weight: 700;
             font-size: 1.5rem;
             flex-shrink: 0;
@@ -192,19 +207,20 @@
             font-size: 1rem;
             font-weight: 600;
             margin: 0 0 0.3rem;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .benefit-item p {
-            color: #6b7280;
+            color: var(--text-muted);
             margin: 0;
             font-size: 0.95rem;
         }
 
         .cta-section {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(56, 189, 248, 0.08));
+            background: linear-gradient(145deg, rgba(168, 85, 247, 0.1), rgba(56, 189, 248, 0.08));
             padding: 5rem 2rem;
             text-align: center;
+            border-bottom: 1px solid var(--border);
         }
 
         .cta-content {
@@ -216,20 +232,21 @@
             font-size: 2rem;
             font-weight: 700;
             margin: 0 0 1rem;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .cta-content p {
-            color: #6b7280;
+            color: var(--text-muted);
             margin: 0 0 2rem;
             font-size: 1.1rem;
         }
 
         .footer-section {
-            background: var(--dark);
-            color: white;
+            background: rgba(10, 16, 32, 0.8);
+            color: var(--text);
             padding: 4rem 2rem;
             text-align: center;
+            border-top: 1px solid var(--border);
         }
 
         .footer-content {
@@ -238,130 +255,151 @@
         }
 
         .footer-text {
-            color: #9ca3af;
+            color: var(--text-muted);
             margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .landing-hero {
+                padding: 3rem 1rem;
+            }
+
+            .features-section {
+                padding: 3rem 1rem;
+            }
+
+            .cta-section {
+                padding: 3rem 1rem;
+            }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <!-- Hero Section -->
-    <section class="landing-hero">
-        <div class="hero-content">
-            <div class="hero-badge">✨ Enterprise-Grade Patch Management</div>
-            <h1>Secure Your Infrastructure with Confidence</h1>
-            <p>PatchStash streamlines patch cycle management and vulnerability assessment. Centralize your security operations, reduce risk, and maintain compliance across all assets.</p>
-            <div class="hero-cta">
-                <a href="{{ path('app_login') }}" class="btn btn-primary">Get Started</a>
-                <a href="#features" class="btn btn-secondary">Learn More</a>
+    <div class="landing-wrapper">
+        <!-- Hero Section -->
+        <section class="landing-hero">
+            <div class="hero-content">
+                <div class="hero-badge">✨ Enterprise-Grade Patch Management</div>
+                <h1>Secure Your Infrastructure with Confidence</h1>
+                <p>PatchStash streamlines patch cycle management and vulnerability assessment. Centralize your security operations, reduce risk, and maintain compliance across all assets.</p>
+                <div class="hero-cta">
+                    <a href="{{ path('app_login') }}" class="btn btn-primary">Get Started</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Features Section -->
-    <section class="features-section" id="features">
-        <div class="features-container">
-            <div class="section-header">
-                <h2>Powerful Features</h2>
-                <p>Everything you need to manage patches and vulnerabilities efficiently</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3>Patch Cycle Management</h3>
-                    <p>Organize patches by module, set deadlines, and track deployment progress with real-time status updates.</p>
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="features-container">
+                <div class="section-header">
+                    <h2>Powerful Features</h2>
+                    <p>Everything you need to manage patches and vulnerabilities efficiently</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚠️</div>
-                    <h3>Vulnerability Tracking</h3>
-                    <p>Identify, assess, and prioritize vulnerabilities by severity and CVSS score. Link CVEs directly to patch cycles.</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3>Patch Cycle Management</h3>
+                        <p>Organize patches by module, set deadlines, and track deployment progress with real-time status updates.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚠️</div>
+                        <h3>Vulnerability Tracking</h3>
+                        <p>Identify, assess, and prioritize vulnerabilities by severity and CVSS score. Link CVEs directly to patch cycles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Risk Assessment</h3>
+                        <p>Visualize your security posture with intuitive dashboards and comprehensive vulnerability reports.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Role-Based Access</h3>
+                        <p>Assign fine-grained permissions to admins, managers, operators, and auditors for secure collaboration.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h3>Compliance Reporting</h3>
+                        <p>Generate audit-ready reports that demonstrate your patch management effectiveness and security posture.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Enterprise Security</h3>
+                        <p>Enterprise-grade security with role-based access control, audit logs, and permission enforcement.</p>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Risk Assessment</h3>
-                    <p>Visualize your security posture with intuitive dashboards and comprehensive vulnerability reports.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">👥</div>
-                    <h3>Role-Based Access</h3>
-                    <p>Assign fine-grained permissions to admins, managers, operators, and auditors for secure collaboration.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3>Compliance Reporting</h3>
-                    <p>Generate audit-ready reports that demonstrate your patch management effectiveness and security posture.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>Enterprise Security</h3>
-                    <p>Enterprise-grade security with role-based access control, audit logs, and permission enforcement.</p>
-                </div>
-            </div>
 
-            <div class="section-header">
-                <h2>Why PatchStash?</h2>
-                <p>Stay ahead of security threats with a comprehensive patch management solution</p>
+                <div class="section-header">
+                    <h2>Why PatchStash?</h2>
+                    <p>Stay ahead of security threats with a comprehensive patch management solution</p>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Reduce Risk</h4>
+                            <p>Systematically patch vulnerabilities before exploitation.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Maintain Compliance</h4>
+                            <p>Meet regulatory requirements with documented patch records.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Save Time</h4>
+                            <p>Automate patch organization and vulnerability assessment.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Improve Visibility</h4>
+                            <p>Real-time dashboards show patch progress and vulnerability status.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Team Collaboration</h4>
+                            <p>Role-based workflows enable secure cross-team operations.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Enterprise Ready</h4>
+                            <p>Scalable infrastructure for organizations of any size.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="benefits-grid">
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Reduce Risk</h4>
-                        <p>Systematically patch vulnerabilities before exploitation.</p>
-                    </div>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Maintain Compliance</h4>
-                        <p>Meet regulatory requirements with documented patch records.</p>
-                    </div>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Save Time</h4>
-                        <p>Automate patch organization and vulnerability assessment.</p>
-                    </div>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Improve Visibility</h4>
-                        <p>Real-time dashboards show patch progress and vulnerability status.</p>
-                    </div>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Team Collaboration</h4>
-                        <p>Role-based workflows enable secure cross-team operations.</p>
-                    </div>
-                </div>
-                <div class="benefit-item">
-                    <div class="benefit-check">✓</div>
-                    <div>
-                        <h4>Enterprise Ready</h4>
-                        <p>Scalable infrastructure for organizations of any size.</p>
-                    </div>
-                </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to Take Control?</h2>
+                <p>Join organizations that trust PatchStash to secure their infrastructure and manage compliance effortlessly.</p>
+                <a href="{{ path('app_login') }}" class="btn btn-primary">Sign In</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-content">
-            <h2>Ready to Take Control?</h2>
-            <p>Join organizations that trust PatchStash to secure their infrastructure and manage compliance effortlessly.</p>
-            <a href="{{ path('app_login') }}" class="btn btn-primary">Sign In</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <section class="footer-section">
-        <div class="footer-content">
-            <p class="footer-text">&copy; {{ "now"|date("Y") }} PatchStash. All rights reserved.</p>
-        </div>
-    </section>
+        <!-- Footer -->
+        <section class="footer-section">
+            <div class="footer-content">
+                <p class="footer-text">&copy; {{ "now"|date("Y") }} PatchStash. All rights reserved.</p>
+            </div>
+        </section>
+    </div>
 {% endblock %}
+
