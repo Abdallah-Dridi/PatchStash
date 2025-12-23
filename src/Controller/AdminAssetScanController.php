@@ -47,7 +47,7 @@ final class AdminAssetScanController extends AbstractController
         return $this->redirectToRoute($routeName);
     }
 
-    #[Route('/admin/assets/{id}/scan', name: 'app_admin_asset_scan_single', methods: ['POST'])]
+    #[Route('/admin/assets/{id}/scan', name: 'app_admin_asset_scan_single', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
     public function scanSingle(\App\Entity\Asset $asset, VulnerabilityScannerService $scannerService): Response
     {

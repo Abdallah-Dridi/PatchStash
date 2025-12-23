@@ -48,7 +48,7 @@ final class AdminAssetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_asset_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_admin_asset_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Asset $asset): Response
     {
         return $this->render('admin/asset/show.html.twig', [
@@ -56,7 +56,7 @@ final class AdminAssetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_asset_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_admin_asset_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Asset $asset, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
         $redirect = $permissionChecker->requirePermissionOrRedirect('edit_asset', 'app_admin_assets');
@@ -83,7 +83,7 @@ final class AdminAssetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_asset_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_admin_asset_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Asset $asset, EntityManagerInterface $entityManager, PermissionChecker $permissionChecker): Response
     {
         $redirect = $permissionChecker->requirePermissionOrRedirect('delete_asset', 'app_admin_assets');
