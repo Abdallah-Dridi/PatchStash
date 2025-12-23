@@ -8,9 +8,12 @@
             <style>
                 body.layout {
                     margin: 0;
-                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-                    background: #0b1224;
-                    color: #e5e7eb;
+                    font-family: var(--font-sans);
+                    background:
+                        radial-gradient(circle at 12% 18%, rgba(168, 85, 247, 0.18), transparent 38%),
+                        radial-gradient(circle at 88% 10%, rgba(56, 189, 248, 0.2), transparent 42%),
+                        var(--app-bg-strong);
+                    color: var(--app-text);
                     min-height: 100vh;
                 }
                 .shell { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
@@ -18,13 +21,55 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    padding: 1rem 0;
+                    padding: 0.85rem 1.1rem;
+                    background: rgba(10, 16, 32, 0.7);
+                    border-radius: 16px;
+                    border: 1px solid var(--app-border);
+                    box-shadow: var(--app-shadow);
+                    backdrop-filter: blur(12px);
                 }
-                .topnav a { color: #e5e7eb; text-decoration: none; margin-left: 1rem; }
-                .topnav .brand { font-weight: 700; letter-spacing: 0.04em; }
-                .nav-links { display: flex; align-items: center; gap: 0.75rem; }
-                .muted { color: #9ca3af; }
-                main.shell { padding-top: 1rem; }
+                .topnav a {
+                    color: var(--app-text);
+                    text-decoration: none;
+                    margin-left: 0.4rem;
+                    padding: 0.35rem 0.75rem;
+                    border-radius: 999px;
+                    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+                }
+                .topnav a:hover {
+                    background: rgba(56, 189, 248, 0.15);
+                    color: #f8fafc;
+                    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.2);
+                }
+                .topnav .brand { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+                .nav-links { display: flex; align-items: center; gap: 0.4rem; }
+                .muted { color: var(--app-muted); }
+                .flash-message {
+                    border-radius: 14px;
+                    box-shadow: var(--app-shadow);
+                    backdrop-filter: blur(8px);
+                    font-weight: 500;
+                }
+                main.shell {
+                    padding: 1.5rem 0 3rem;
+                    animation: fadeUp 0.35s ease both;
+                }
+                @keyframes fadeUp {
+                    from { opacity: 0; transform: translateY(8px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @media (max-width: 720px) {
+                    .topnav {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 0.6rem;
+                    }
+                    .nav-links { flex-wrap: wrap; }
+                    .topnav a { margin-left: 0; }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    main.shell { animation: none; }
+                }
             </style>
         {% endblock %}
 
