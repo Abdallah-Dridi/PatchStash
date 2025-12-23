@@ -2,6 +2,54 @@
 
 {% block title %}New Patch Cycle{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-vulnerabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .vulnerability-checkbox {
+            display: flex;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f3f4f6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .vulnerability-checkbox:hover {
+            border-color: #a855f7;
+            background: #faf5ff;
+        }
+        .vulnerability-checkbox input[type="checkbox"] {
+            margin-right: 1rem;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+        }
+        .vulnerability-checkbox input[type="checkbox"]:checked {
+            accent-color: #a855f7;
+        }
+        .vulnerability-info {
+            flex: 1;
+        }
+        .vulnerability-info strong {
+            display: block;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        .vulnerability-info small {
+            display: block;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+    </style>
+{% endblock %}
+
 {% block user_content %}
 <div class="page-head">
     <div>

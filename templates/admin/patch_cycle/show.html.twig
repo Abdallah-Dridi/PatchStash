@@ -19,6 +19,10 @@
     <h2>Details</h2>
     <div class="details-grid">
         <div>
+            <p class="label">Module</p>
+            <p>{{ patch_cycle.module ? patch_cycle.module.name : 'Not assigned' }}</p>
+        </div>
+        <div>
             <p class="label">Asset</p>
             <p>{{ patch_cycle.asset.name ?? 'N/A' }}</p>
         </div>
@@ -52,4 +56,58 @@
         </div>
     </div>
 </div>
+
+{% if patch_cycle.vulnerabilities|length > 0 %}
+<div class="admin-panel" style="margin-top:1rem;">
+    <header class="panel-header">
+        <div>
+            <h2>Linked Vulnerabilities</h2>
+            <p class="text-muted">CVEs included in this patch cycle.</p>
+        </div>
+    </header>
+    <div class="admin-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>CVE</th>
+                    <th>Title</th>
+                    <th>Severity</th>
+                    <th>CVSS</th>
+                    <th>Asset</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for vulnerability in patch_cycle.vulnerabilities %}
+                {% set sev = vulnerability.severity|default('Medium') %}
+                {% set sevClass = {
+                    'Critical': 'critical',
+                    'High': 'high',
+                    'Medium': 'medium',
+                    'Low': 'low'
+                }[sev]|default('medium') %}
+                <tr>
+                    <td><strong>{{ vulnerability.cveId }}</strong></td>
+                    <td class="text-muted">{{ vulnerability.name }}</td>
+                    <td><span class="badge {{ sevClass }}">{{ sev }}</span></td>
+                    {% set cvssScore = vulnerability.cvss|default(0) %}
+                    {% set cvssClass = cvssScore >= 9 ? 'critical' : (cvssScore >= 7 ? 'high' : (cvssScore >= 4 ? 'medium' : 'low')) %}
+                    <td><span class="badge {{ cvssClass }}">{{ cvssScore }}</span></td>
+                    <td class="text-muted">{{ vulnerability.asset ? vulnerability.asset.name : '—' }}</td>
+                    <td class="text-end">
+                        <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_admin_vulnerability_show', {'id': vulnerability.id}) }}">View</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="admin-panel" style="margin-top:1rem;">
+    <p class="text-muted">No vulnerabilities linked to this patch cycle yet.</p>
+</div>
+{% endif %}
 {% endblock %}

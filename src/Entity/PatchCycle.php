@@ -53,6 +53,10 @@ class PatchCycle
     #[ORM\JoinColumn(name: 'asset_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?Asset $asset = null;
 
+    #[ORM\ManyToOne(targetEntity: Module::class)]
+    #[ORM\JoinColumn(name: 'module_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    private ?Module $module = null;
+
     public function __construct()
     {
         $this->vulnerabilities = new ArrayCollection();
@@ -185,6 +189,17 @@ class PatchCycle
 
     public function getCreatedAt(): ?\DateTimeInterface { return $this->createdAt; }
     public function setCreatedAt(?\DateTimeInterface $createdAt): self { $this->createdAt = $createdAt; return $this; }
+
+    public function getModule(): ?Module 
+    { 
+        return $this->module; 
+    }
+
+    public function setModule(?Module $module): self 
+    { 
+        $this->module = $module; 
+        return $this; 
+    }
 
     public function __toString(): string 
     { 

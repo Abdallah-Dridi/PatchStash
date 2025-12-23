@@ -12,7 +12,12 @@
             {{ form_errors(form.status) }}
         </div>
         <div>
-            {{ form_label(form.asset, 'Asset') }}
+            {{ form_label(form.module, 'Module') }}
+            {{ form_widget(form.module) }}
+            {{ form_errors(form.module) }}
+        </div>
+        <div>
+            {{ form_label(form.asset, 'Asset (Optional)') }}
             {{ form_widget(form.asset) }}
             {{ form_errors(form.asset) }}
         </div>
@@ -41,9 +46,16 @@
             {{ form_widget(form.info, {'attr': {'placeholder': 'Technical details, notes...', 'rows': 3}}) }}
             {{ form_errors(form.info) }}
         </div>
+        <div style="grid-column: 1 / -1;">
+            {{ form_label(form.vulnerabilities, 'Select Vulnerabilities for This Patch Cycle') }}
+            <p class="text-muted">Choose which vulnerabilities to include in this patch cycle (sorted by severity):</p>
+            {{ form_widget(form.vulnerabilities) }}
+            {{ form_errors(form.vulnerabilities) }}
+        </div>
     </div>
     <div class="form-footer">
         <a class="btn ghost" href="{{ path('app_patch_cycle_index') }}">Cancel</a>
         <button class="btn primary">{{ button_label|default('Save Patch Cycle') }}</button>
     </div>
 {{ form_end(form) }}
+

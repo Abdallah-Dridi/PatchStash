@@ -18,6 +18,10 @@
 <div class="admin-panel">
     <div class="meta-grid">
         <div class="detail-block">
+            <p class="text-muted">Module</p>
+            <p>{{ patch_cycle.module ? patch_cycle.module.name : 'Not assigned' }}</p>
+        </div>
+        <div class="detail-block">
             <p class="text-muted">Asset</p>
             <p>{{ patch_cycle.asset ? patch_cycle.asset.name : 'Unassigned' }}</p>
         </div>
@@ -65,8 +69,8 @@
 <div class="admin-panel" style="margin-top:1rem;">
     <header class="panel-header">
         <div>
-            <h2>Linked vulnerabilities</h2>
-            <p class="text-muted">Severity and CVSS for this cycle.</p>
+            <h2>Linked Vulnerabilities</h2>
+            <p class="text-muted">CVEs included in this patch cycle.</p>
         </div>
     </header>
     <div class="admin-table">
@@ -77,6 +81,7 @@
                     <th>Title</th>
                     <th>Severity</th>
                     <th>CVSS</th>
+                    <th>Asset</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -90,14 +95,29 @@
                     'Low': 'low'
                 }[sev]|default('medium') %}
                 <tr>
-                    <td>{{ vulnerability.cveId }}</td>
-                    <td>{{ vulnerability.name }}</td>
+                    <td><strong>{{ vulnerability.cveId }}</strong></td>
+                    <td class="text-muted">{{ vulnerability.name }}</td>
                     <td><span class="badge {{ sevClass }}">{{ sev }}</span></td>
                     {% set cvssScore = vulnerability.cvss|default(0) %}
                     {% set cvssClass = cvssScore >= 9 ? 'critical' : (cvssScore >= 7 ? 'high' : (cvssScore >= 4 ? 'medium' : 'low')) %}
                     <td><span class="badge {{ cvssClass }}">{{ cvssScore }}</span></td>
+                    <td class="text-muted">{{ vulnerability.asset ? vulnerability.asset.name : '—' }}</td>
                     <td class="text-end">
                         <div class="table-actions">
+                            <a class="btn ghost" href="{{ path('app_vulnerability_show', {'cveId': vulnerability.cveId}) }}">View</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="admin-panel" style="margin-top:1rem;">
+    <p class="text-muted">No vulnerabilities linked to this patch cycle yet.</p>
+</div>
+{% endif %}
                             <a class="btn ghost" href="{{ path('app_vulnerability_show', {'cveId': vulnerability.cveId}) }}">View</a>
                         </div>
                     </td>
